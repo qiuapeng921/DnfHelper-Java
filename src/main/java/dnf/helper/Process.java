@@ -1,4 +1,4 @@
-package io.github.lunasaw.helper;
+package dnf.helper;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import lombok.extern.slf4j.Slf4j;

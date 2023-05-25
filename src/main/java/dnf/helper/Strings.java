@@ -1,4 +1,4 @@
-package io.github.lunasaw.helper;
+package dnf.helper;
 
 import java.util.Arrays;
 
