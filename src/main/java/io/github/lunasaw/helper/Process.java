@@ -1,7 +1,9 @@
 package io.github.lunasaw.helper;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Process {
 
     public static WinNT.HANDLE openProcess(Integer pid){
@@ -9,9 +11,9 @@ public class Process {
         WinNT.HANDLE process = kernel32.OpenProcess(0x1F0FFF, false, pid);
         if (process == null) {
             int error = kernel32.GetLastError();
-            System.out.println("Failed to open process. Error code: " + error);
+            log.error("openProcess::pid = {} , error = {}", pid, error);
         } else {
-            System.out.println("Process opened successfully");
+            log.info("Process opened successfully = {}", pid);
             kernel32.CloseHandle(process);
         }
         return process;
