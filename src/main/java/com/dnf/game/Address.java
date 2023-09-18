@@ -1,4 +1,4 @@
-package dnf.game;
+package com.dnf.game;
 
 public enum Address {
 }
