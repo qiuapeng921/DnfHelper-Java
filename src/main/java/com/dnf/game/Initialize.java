@@ -3,7 +3,6 @@ package com.dnf.game;
 import cn.hutool.core.date.DateUtil;
 import com.dnf.driver.impl.ApiMemory;
 import com.dnf.helper.Process;
-import com.dnf.helper.Timer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Win32VK;
 import com.sun.jna.platform.win32.WinUser;
@@ -81,13 +80,14 @@ public class Initialize {
      * 初始化空白地址
      */
     private void initEmptyAddress() {
-        Address.RwKbAddr = apiMemory.allocate(2048);
-        Address.BuffKbAddr = apiMemory.allocate(2048);
-        Address.NcBhKbAddr = apiMemory.allocate(2048);
-        Address.PtGgKbAddr = apiMemory.allocate(2048);
-        Address.JnKbAddr = apiMemory.allocate(2048);
-        Address.GtKbAddr = apiMemory.allocate(2048);
-        Address.CoolDownKbAddr = apiMemory.allocate(2048);
-        Timer.sleep(200);
+        Address.RwKbAddr = apiMemory.allocate(4096);
+        Address.NcBhKbAddr = apiMemory.allocate(4096);
+        Address.JnKbAddr = apiMemory.allocate(4096);
+        Address.GtKbAddr = apiMemory.allocate(4096);
+
+        logger.info("人物基址 {}", Long.toHexString(Address.RwKbAddr));
+        logger.info("内存汇编 {}", Long.toHexString(Address.NcBhKbAddr));
+        logger.info("技能空白 {}", Long.toHexString(Address.JnKbAddr));
+        logger.info("过图空白 {}", Long.toHexString(Address.GtKbAddr));
     }
 }

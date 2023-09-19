@@ -73,7 +73,7 @@ public class AutoThread {
 
                     //  sss评分
                     Random random = new Random();
-                    int nextInt = random.nextInt(5201314, 9999999);
+                    int nextInt = random.nextInt(9999999 - 5201314 + 1) + 5201314;
                     apiMemory.writeLong(apiMemory.readLong(Address.PFAddr) + Address.CEPfAddr, nextInt);
                     firstEnterMap = true;
                 }

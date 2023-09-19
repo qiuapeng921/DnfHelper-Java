@@ -42,8 +42,12 @@ public class ApiMemory implements ReadWrite {
         if (handle == null) {
             return 0;
         }
-        Pointer pointer = kernel32.VirtualAllocEx(handle, new Pointer(0), new BaseTSD.SIZE_T(size), 4096, 64);
-        return pointer.getLong(0);
+
+        // 分配内存
+        int allocationType = Kernel32.MEM_COMMIT | Kernel32.MEM_RESERVE;
+        int protect = Kernel32.PAGE_EXECUTE_READWRITE;
+        Pointer pointer = Kernel32.INSTANCE.VirtualAllocEx(handle, null, new BaseTSD.SIZE_T(size), allocationType, protect);
+        return Pointer.nativeValue(pointer);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class ApiMemory implements ReadWrite {
     @Override
     public int[] readByte(long address, int size) {
         Memory memory = readMemory(address, size);
-        if (memory == null){
+        if (memory == null) {
             return null;
         }
         int[] memoryValues = new int[size];
@@ -94,7 +98,7 @@ public class ApiMemory implements ReadWrite {
     @Override
     public short readShort(long address) {
         Memory memory = readMemory(address, 2);
-        if (memory == null){
+        if (memory == null) {
             return 0;
         }
         return memory.getShort(0);
@@ -103,7 +107,7 @@ public class ApiMemory implements ReadWrite {
     @Override
     public int readInt(long address) {
         Memory memory = readMemory(address, 4);
-        if (memory == null){
+        if (memory == null) {
             return 0;
         }
         return memory.getInt(0);
@@ -112,7 +116,7 @@ public class ApiMemory implements ReadWrite {
     @Override
     public long readLong(long address) {
         Memory memory = readMemory(address, 8);
-        if (memory == null){
+        if (memory == null) {
             return 0;
         }
         return memory.getLong(0);
@@ -121,7 +125,7 @@ public class ApiMemory implements ReadWrite {
     @Override
     public float readFloat(long address) {
         Memory memory = readMemory(address, 4);
-        if (memory == null){
+        if (memory == null) {
             return 0;
         }
         return memory.getFloat(0);
@@ -130,7 +134,7 @@ public class ApiMemory implements ReadWrite {
     @Override
     public double readDouble(long address) {
         Memory memory = readMemory(address, 8);
-        if (memory == null){
+        if (memory == null) {
             return 0;
         }
         return memory.getDouble(0);
