@@ -21,11 +21,14 @@ public class Initialize {
     @Resource
     private AutoThread autoThread;
 
+    @Resource
+    private Screen screen;
+
 
     public void Init() {
         String modelName = "dnf.exe";
         int processId = Process.getProcessId(modelName);
-        if (processId == 0){
+        if (processId == 0) {
             logger.info("等待游戏运行...");
             do {
                 processId = Process.getProcessId(modelName);
@@ -53,15 +56,15 @@ public class Initialize {
             if (msg.message == WinUser.WM_HOTKEY) {
                 int hotkeyId = msg.wParam.intValue();
                 if (hotkeyId == Win32VK.VK_F1.code) {
-                    System.out.println("hotkeyId = " + hotkeyId);
+                    screen.screenSwitch();
                 }
                 if (hotkeyId == Win32VK.VK_END.code) {
                     autoThread.autoSwitch();
                 }
                 if (hotkeyId == Win32VK.VK_OEM_3.code) {
-                    System.out.println("hotkeyId = " + hotkeyId);
+                    screen.screenKill();
                 }
-            }else {
+            } else {
                 user32.TranslateMessage(msg);
                 user32.DispatchMessage(msg);
             }

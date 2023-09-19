@@ -1,5 +1,6 @@
 package com.dnf.game;
 
+import cn.hutool.core.date.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.time.Instant;
 public class AutoThread {
     private final Logger logger = LoggerFactory.getLogger(AutoThread.class.getName());
 
-    private volatile boolean autoSwitch;
+    private boolean autoSwitch;
 
     /**
      * 自动开关
@@ -21,10 +22,10 @@ public class AutoThread {
             Thread thread = new Thread(this::autoThread);
             thread.start();
             autoSwitch = true;
-            logger.info("自动刷图 - [ 开启 ]");
+            logger.info("自动刷图 - [ √ ]");
         } else {
             autoSwitch = false;
-            logger.info("自动刷图 - [ 结束 ]");
+            logger.info("自动刷图 - [ x ]");
         }
     }
 
@@ -33,7 +34,7 @@ public class AutoThread {
         while (autoSwitch) {
             try {
                 Thread.sleep(200);
-                logger.info("自动刷图线程：{}", Instant.now());
+                logger.info("自动刷图：{}", DateUtil.date(System.currentTimeMillis()));
             } catch (Exception e) {
                 logger.error("自动刷图线程异常：{}", e.getMessage());
             }
