@@ -5,46 +5,67 @@ import java.nio.ByteOrder;
 
 public class Bytes {
 
-    /**
-     * 将整数转换为字节数组
-     *
-     * @param intVal 整数值
-     * @param size   整数类型（2表示short，4表示int，8表示long）
-     * @return 字节数组
-     */
-    public static int[] intToBytes(long intVal, int size) {
-        if (size < 1) {
-            throw new IllegalArgumentException("Size must be greater than 0");
+    public static <T> int[] intToBytes(T value) {
+        byte[] bytes;
+        if (value instanceof Short) {
+            ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putInt((Short) value);
+            bytes = buffer.array();
+        } else if (value instanceof Integer) {
+            ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putInt((Integer) value);
+            bytes = buffer.array();
+        } else if (value instanceof Long) {
+            ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putLong((Long) value);
+            bytes = buffer.array();
+        } else {
+            throw new IllegalArgumentException("Unsupported value type");
         }
-        int[] intArray = new int[size];
-        for (int i = 0; i < size; i++) {
-            intArray[i] = (int) ((intVal >> (8 * i)) & 0xff);
+
+        int[] result = new int[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            result[i] = bytes[i] & 0xFF;
         }
-        return intArray;
+
+        return result;
     }
 
-    /**
-     * 将浮点数转换为字节数组
-     *
-     * @param floatVal  浮点数值
-     * @param floatType 浮点数类型（4表示float，8表示double）
-     * @return 字节数组
-     */
-    public static int[] floatToBytes(float floatVal, int floatType) {
-        ByteBuffer buffer = ByteBuffer.allocate(floatType);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        if (floatType == 4) {
-            buffer.putFloat(floatVal);
-        } else if (floatType == 8) {
-            buffer.putDouble(floatVal);
+    public static <T> int[] floatToBytes(T value) {
+        byte[] bytes;
+        if (value instanceof Float) {
+            ByteBuffer buffer = ByteBuffer.allocate(Float.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putFloat((Float) value);
+            bytes = buffer.array();
+        } else if (value instanceof Double) {
+            ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putDouble((Double) value);
+            bytes = buffer.array();
+        } else {
+            throw new IllegalArgumentException("Unsupported value type");
         }
-        byte[] byteArray = buffer.array();
-        int[] intArray = new int[byteArray.length];
-        for (int i = 0; i < byteArray.length; i++) {
-            intArray[i] = byteArray[i];
+
+        int[] result = new int[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            result[i] = bytes[i] & 0xFF;
         }
-        return intArray;
+
+        return result;
     }
+
+//    public static <T> T bytesToInt(T value) {
+//        return 1;
+//    }
+//
+//
+//    public static <T> T bytesToFloat(T value) {
+//        return T;
+//    }
 
     /**
      * 将多个字节数组连接在一起

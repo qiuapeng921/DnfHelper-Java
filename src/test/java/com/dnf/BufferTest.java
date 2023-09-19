@@ -9,6 +9,45 @@ import java.util.Arrays;
 
 @SpringBootTest
 public class BufferTest {
+    public static <T> int[] convertToBytes(T value) {
+        byte[] bytes;
+        if (value instanceof Short) {
+            ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putInt((Short) value);
+            bytes = buffer.array();
+        } else if (value instanceof Integer) {
+            ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putInt((Integer) value);
+            bytes = buffer.array();
+        } else if (value instanceof Long) {
+            ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putLong((Long) value);
+            bytes = buffer.array();
+        } else if (value instanceof Float) {
+            ByteBuffer buffer = ByteBuffer.allocate(Float.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putFloat((Float) value);
+            bytes = buffer.array();
+        } else if (value instanceof Double) {
+            ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putDouble((Double) value);
+            bytes = buffer.array();
+        } else {
+            throw new IllegalArgumentException("Unsupported value type");
+        }
+
+        int[] result = new int[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            result[i] = bytes[i] & 0xFF;
+        }
+
+        return result;
+    }
+
     @Test
     public void intToByte() {
         int value = 123; // 要转换的int值
