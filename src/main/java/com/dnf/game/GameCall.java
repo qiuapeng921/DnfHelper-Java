@@ -123,7 +123,7 @@ public class GameCall {
      * @param z       z坐标
      * @param size    技能大小
      */
-    public void skillCall(int address, int code, int harm, int x, int y, int z, float size) {
+    public void skillCall(long address, int code, int harm, int x, int y, int z, float size) {
         // 空白地址
         long emptyAddress = Address.JnKbAddr;
         // 向空白地址写入参数

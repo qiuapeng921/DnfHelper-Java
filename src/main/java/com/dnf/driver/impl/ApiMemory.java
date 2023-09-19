@@ -75,7 +75,7 @@ public class ApiMemory implements ReadWrite {
             }
             return buffer;
         } catch (Exception e) {
-            logger.error("readByteMemory address = {} , error = {}", address, e.getMessage());
+            logger.error("readByteMemory address = {} , error = {}", address, e.getStackTrace());
             return null;
         } finally {
             kernel32.CloseHandle(handle);

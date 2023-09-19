@@ -143,7 +143,7 @@ public class MapData {
      * @param param int
      * @return CoordinateType
      */
-    public CoordinateType readCoordinate(int param) {
+    public CoordinateType readCoordinate(long param) {
         CoordinateType coordinate = new CoordinateType();
         if (apiMemory.readInt(param + Address.LxPyAddr) == 273) {
             long ptr = apiMemory.readLong(param + Address.DqZbAddr);
@@ -193,5 +193,29 @@ public class MapData {
     public int getFame() {
         long personPtr = gameCall.personPtr();
         return apiMemory.readInt(personPtr + Address.RwMwAddr);
+    }
+
+    /**
+     * 取遍历指针
+     *
+     * @param ptr    long 指针地址
+     * @param offset int 漂移计次
+     * @param t      int  1 物品 2 地图
+     * @return long
+     */
+    public long getTraversalPtr(long ptr, long offset, int t) {
+        long result = 0;
+
+        if (t == 1) {
+            long one = apiMemory.readLong(ptr + (offset - 1) * 8L);
+            long two = apiMemory.readLong(one - 72);
+            result = apiMemory.readLong(two + 16);
+        }
+        if (t == 2) {
+            long one = apiMemory.readLong(ptr + (offset - 1) * 24L);
+            result = apiMemory.readLong(one + 16) - 32;
+        }
+
+        return result;
     }
 }
