@@ -10,11 +10,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GameCall {
+    private static boolean compileCallRun;
     Logger logger = LoggerFactory.getLogger(GameCall.class.getName());
-
     @Resource
     private ApiMemory apiMemory;
-    private static boolean compileCallRun;
 
     public int[] subRsp(int i) {
         if (i > 127) {
@@ -91,6 +90,7 @@ public class GameCall {
 
     /**
      * 取人物指针call
+     *
      * @param address long
      * @return long
      */
@@ -105,6 +105,7 @@ public class GameCall {
 
     /**
      * 人物指针
+     *
      * @return long
      */
     public long personPtr() {

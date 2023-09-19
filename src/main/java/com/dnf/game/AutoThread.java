@@ -1,6 +1,5 @@
 package com.dnf.game;
 
-import cn.hutool.core.date.DateUtil;
 import com.dnf.driver.impl.ApiMemory;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
@@ -10,28 +9,21 @@ import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
-import java.time.Instant;
-
 @Component
 public class AutoThread {
-    Logger logger = LoggerFactory.getLogger(AutoThread.class.getName());
-
-
-    @Resource
-    private ApiMemory apiMemory;
-
-    @Resource
-    private MapData mapData;
-
-    /**
-     * 自动开关
-     */
-    private boolean autoSwitch;
-
     /**
      * 首次进图
      */
     private static boolean firstEnterMap;
+    Logger logger = LoggerFactory.getLogger(AutoThread.class.getName());
+    @Resource
+    private ApiMemory apiMemory;
+    @Resource
+    private MapData mapData;
+    /**
+     * 自动开关
+     */
+    private boolean autoSwitch;
 
     /**
      * 自动开关

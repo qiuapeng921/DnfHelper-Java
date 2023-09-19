@@ -20,8 +20,9 @@ public class MapData {
 
     /**
      * 加密
+     *
      * @param address long 内存地址
-     * @param value int 数值
+     * @param value   int 数值
      */
     public void encode(long address, int value) {
         apiMemory.writeInt(address, value);
@@ -29,6 +30,7 @@ public class MapData {
 
     /**
      * 解密
+     *
      * @param address long 内存地址
      * @return int
      */
@@ -71,6 +73,7 @@ public class MapData {
 
     /**
      * 获取当前房间坐标
+     *
      * @return CoordinateType
      */
     public CoordinateType getCutRoom() {
@@ -83,6 +86,7 @@ public class MapData {
 
     /**
      * 获取boss房间坐标
+     *
      * @return CoordinateType
      */
     public CoordinateType getBossRoom() {
@@ -95,6 +99,7 @@ public class MapData {
 
     /**
      * 是否通关
+     *
      * @return boolean
      */
     public boolean isPass() {
@@ -105,6 +110,7 @@ public class MapData {
 
     /**
      * 获取疲劳值
+     *
      * @return int
      */
     public int getPl() {
@@ -113,6 +119,7 @@ public class MapData {
 
     /**
      * 获取角色等级
+     *
      * @return int
      */
     public int getRoleLevel() {
@@ -121,6 +128,7 @@ public class MapData {
 
     /**
      * 获取地图名称
+     *
      * @return string
      */
     public String getMapName() {
@@ -131,6 +139,7 @@ public class MapData {
 
     /**
      * 读坐标
+     *
      * @param param int
      * @return CoordinateType
      */
@@ -164,6 +173,7 @@ public class MapData {
 
     /**
      * 背包负重
+     *
      * @return int
      */
     public int backpackWeight() {
@@ -177,6 +187,7 @@ public class MapData {
 
     /**
      * 获取名望
+     *
      * @return int
      */
     public int getFame() {
