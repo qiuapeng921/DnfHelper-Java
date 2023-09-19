@@ -20,6 +20,7 @@
         <luna-common.version>2.4.5</luna-common.version>
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <hutool.version>5.8.21</hutool.version>
+        <jna.version>5.13.0</jna.version>
     </properties>
 
     <dependencyManagement>
@@ -38,6 +39,11 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${jna.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -67,7 +73,6 @@
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>5.13.0</version>
         </dependency>
 
         <dependency>
