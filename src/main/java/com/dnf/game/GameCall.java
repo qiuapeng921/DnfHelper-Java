@@ -2,6 +2,7 @@ package com.dnf.game;
 
 import com.dnf.driver.impl.ApiMemory;
 import com.dnf.helper.Bytes;
+import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,10 +80,7 @@ public class GameCall {
 
         apiMemory.writeInt(jumpAddress, 1);
         while (apiMemory.readInt(jumpAddress) == 1) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ignored) {
-            }
+            Timer.sleep(10);
         }
 
         apiMemory.writeByte(hookShell, hookOldData);

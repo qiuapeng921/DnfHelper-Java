@@ -1,6 +1,7 @@
 package com.dnf.game;
 
 import cn.hutool.core.date.DateUtil;
+import com.dnf.helper.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -25,11 +26,8 @@ public class Screen {
 
     private void screenThread() {
         while (screenSwitch) {
-            try {
-                Thread.sleep(300);
-                fullScreen();
-            } catch (InterruptedException ignored) {
-            }
+            Timer.sleep(300);
+            fullScreen();
         }
     }
 

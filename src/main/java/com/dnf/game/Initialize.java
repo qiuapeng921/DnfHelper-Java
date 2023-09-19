@@ -3,6 +3,7 @@ package com.dnf.game;
 import cn.hutool.core.date.DateUtil;
 import com.dnf.driver.impl.ApiMemory;
 import com.dnf.helper.Process;
+import com.dnf.helper.Timer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Win32VK;
 import com.sun.jna.platform.win32.WinUser;
@@ -87,10 +88,6 @@ public class Initialize {
         Address.JnKbAddr = apiMemory.allocate(2048);
         Address.GtKbAddr = apiMemory.allocate(2048);
         Address.CoolDownKbAddr = apiMemory.allocate(2048);
-
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException ignored) {
-        }
+        Timer.sleep(200);
     }
 }
