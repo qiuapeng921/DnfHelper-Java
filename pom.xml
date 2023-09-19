@@ -21,6 +21,7 @@
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <hutool.version>5.8.21</hutool.version>
         <jna.version>5.13.0</jna.version>
+        <ini4j.version>0.5.4</ini4j.version>
     </properties>
 
     <dependencyManagement>
@@ -30,6 +31,7 @@
                 <artifactId>luna-common</artifactId>
                 <version>${luna-common.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
@@ -45,6 +47,11 @@
                 <artifactId>jna</artifactId>
                 <version>${jna.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.ini4j</groupId>
+                <artifactId>ini4j</artifactId>
+                <version>${ini4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -58,7 +65,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
 
+        <!--日志-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -75,15 +88,16 @@
             <artifactId>jna</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
+        <!--常用工具包-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- ini 文件读写-->
+        <dependency>
+            <groupId>org.ini4j</groupId>
+            <artifactId>ini4j</artifactId>
         </dependency>
 
     </dependencies>
