@@ -62,7 +62,13 @@ public class BufferTest {
 
     @Test
     public void byteToInt() {
-        byte[] bytes = {123, 0, 0, 0}; // 要转换的byte数组
+        int[] intArr = {123, 0, 0, 0};
+
+        byte[] bytes = new byte[intArr.length];
+
+        for (int i = 0; i < intArr.length; i++) {
+            bytes[i] = (byte) (intArr[i] & 0xFF);
+        }
 
         // 创建一个ByteBuffer，并设置字节顺序为小端序
         ByteBuffer buffer = ByteBuffer.wrap(bytes);

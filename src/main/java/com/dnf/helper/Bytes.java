@@ -26,12 +26,7 @@ public class Bytes {
             throw new IllegalArgumentException("Unsupported value type");
         }
 
-        int[] result = new int[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            result[i] = bytes[i] & 0xFF;
-        }
-
-        return result;
+        return byteArrToIntArr(bytes);
     }
 
     public static <T> int[] floatToBytes(T value) {
@@ -50,21 +45,59 @@ public class Bytes {
             throw new IllegalArgumentException("Unsupported value type");
         }
 
-        int[] result = new int[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            result[i] = bytes[i] & 0xFF;
+        return byteArrToIntArr(bytes);
+    }
+
+    public static <T> T bytesToInt(int[] value, Class<T> type) {
+        byte[] bytes = intArrToByteArr(value);
+
+        // 创建一个ByteBuffer，并设置字节顺序为小端序
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        if (type == Short.class) {
+            return type.cast(buffer.getShort());
+        } else if (type == Integer.class) {
+            return type.cast(buffer.getInt());
+        } else if (type == Long.class) {
+            return type.cast(buffer.getLong());
+        } else {
+            throw new IllegalArgumentException("Unsupported data type");
+        }
+    }
+
+
+    public static <T> T bytesToFloat(int[] value, Class<T> type) {
+        byte[] bytes = intArrToByteArr(value);
+
+        // 创建一个ByteBuffer，并设置字节顺序为小端序
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        if (type == Float.class) {
+            return type.cast(buffer.getFloat());
+        } else if (type == Double.class) {
+            return type.cast(buffer.getDouble());
+        } else {
+            throw new IllegalArgumentException("Unsupported data type");
+        }
+    }
+
+    private static byte[] intArrToByteArr(int[] value) {
+        byte[] bytes = new byte[value.length];
+
+        for (int i = 0; i < value.length; i++) {
+            bytes[i] = (byte) (value[i] & 0xFF);
+        }
+        return bytes;
+    }
+
+    private static int[] byteArrToIntArr(byte[] value) {
+        int[] result = new int[value.length];
+        for (int i = 0; i < value.length; i++) {
+            result[i] = value[i] & 0xFF;
         }
 
         return result;
-    }
-
-    public static <T> T bytesToInt(T value) {
-        return null;
-    }
-
-
-    public static <T> T bytesToFloat(T value) {
-        return null;
     }
 
     /**
