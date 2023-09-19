@@ -182,6 +182,7 @@ public class MapData {
         int cutWeight = decode(backPackPtr + Address.DqFzAddr);
         int maxWeight = decode(personPtr + Address.ZdFzAddr);
         float result = (float) cutWeight / maxWeight * 100;
+        logger.debug("背包负重: {}", result);
         return (int) result;
     }
 
@@ -215,6 +216,8 @@ public class MapData {
             long one = apiMemory.readLong(ptr + (offset - 1) * 24L);
             result = apiMemory.readLong(one + 16) - 32;
         }
+
+        logger.debug("取遍历指针: {}", result);
 
         return result;
     }

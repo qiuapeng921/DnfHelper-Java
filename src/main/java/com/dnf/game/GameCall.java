@@ -40,6 +40,8 @@ public class GameCall {
      * @param intArr int[]
      */
     public void compileCall(int[] intArr) {
+        logger.debug("compiling call {}", intArr);
+        
         // 汇编中转, 空白地址, 跳转地址
         long assemblyTransit = Address.NcBhKbAddr + 300;
         long blankAddress = Address.NcBhKbAddr + 500;
