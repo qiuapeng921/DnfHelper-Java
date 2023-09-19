@@ -3,6 +3,10 @@ package com.dnf.driver;
 public interface ReadWrite {
     void setProcessId(int processId);
 
+    long allocate(int size);
+
+    boolean freed(int address);
+
     int[] readByte(long address, int size);
 
     short readShort(long address);

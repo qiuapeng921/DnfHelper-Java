@@ -2,6 +2,7 @@ package com.dnf.driver.impl;
 
 import com.dnf.driver.ReadWrite;
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.BaseTSD;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
@@ -37,6 +38,24 @@ public class ApiMemory implements ReadWrite {
         return handle;
     }
 
+    @Override
+    public long allocate(int size) {
+        WinNT.HANDLE handle = openProcess();
+        if (handle == null) {
+            return 0;
+        }
+        Pointer pointer = kernel32.VirtualAllocEx(handle, new Pointer(0), new BaseTSD.SIZE_T(size), 4096, 64);
+        return pointer.getLong(0);
+    }
+
+    @Override
+    public boolean freed(int address) {
+        WinNT.HANDLE handle = openProcess();
+        if (handle == null) {
+            return false;
+        }
+        return kernel32.VirtualFreeEx(handle, new Pointer(address), new BaseTSD.SIZE_T(0), WinNT.MEM_RELEASE);
+    }
 
     private Memory readMemory(long address, int size) {
         WinNT.HANDLE handle = openProcess();
