@@ -28,8 +28,7 @@ public class Screen {
             try {
                 Thread.sleep(300);
                 fullScreen();
-            } catch (Exception e) {
-                logger.error("全屏线程异常：{}", e.getMessage());
+            } catch (InterruptedException ignored) {
             }
         }
     }

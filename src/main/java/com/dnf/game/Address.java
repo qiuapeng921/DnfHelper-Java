@@ -1,6 +1,15 @@
 package com.dnf.game;
 
 public class Address {
+    public static long RwKbAddr = 0;  // 人物基址
+    public static long BuffKbAddr = 0;  // buff地址
+    public static long NcBhKbAddr = 0;  // 内存汇编
+    public static long PtGgKbAddr = 0;  // 普通公告
+    public static long JnKbAddr = 0;  // 技能Call
+    public static long GtKbAddr = 0;  // 过图Call
+    public static long CoolDownKbAddr = 0;  // 冷却判断call
+
+
     public static final long RwAddr = 0x14A9F1D48L; // 新人物基址
     public static final long RwAddr1 = 0x14A9F1D38L; // 人物基址
     public static final long RwAddr2 = 0x14A0F3390L; // 人物基址B

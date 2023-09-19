@@ -37,12 +37,16 @@ public class Initialize {
 
         // 设置全局进程id
         apiMemory.setProcessId(processId);
+        initEmptyAddress();
 
         logger.info("加载成功-欢迎使用");
         logger.info("当前时间：{}", DateUtil.date(System.currentTimeMillis()));
         hotKey();
     }
 
+    /**
+     * 注册热键
+     */
     private void hotKey() {
         User32 user32 = User32.INSTANCE;
 
@@ -68,6 +72,25 @@ public class Initialize {
                 user32.TranslateMessage(msg);
                 user32.DispatchMessage(msg);
             }
+        }
+    }
+
+
+    /**
+     * 初始化空白地址
+     */
+    private void initEmptyAddress() {
+        Address.RwKbAddr = apiMemory.allocate(2048);
+        Address.BuffKbAddr = apiMemory.allocate(2048);
+        Address.NcBhKbAddr = apiMemory.allocate(2048);
+        Address.PtGgKbAddr = apiMemory.allocate(2048);
+        Address.JnKbAddr = apiMemory.allocate(2048);
+        Address.GtKbAddr = apiMemory.allocate(2048);
+        Address.CoolDownKbAddr = apiMemory.allocate(2048);
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ignored) {
         }
     }
 }

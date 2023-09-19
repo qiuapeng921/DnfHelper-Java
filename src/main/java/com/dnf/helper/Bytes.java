@@ -107,7 +107,7 @@ public class Bytes {
      * @param newArrayArr 要连接的新字节数组
      * @return 连接后的字节数组
      */
-    public int[] addBytes(int[] oldArray, int[]... newArrayArr) {
+    public static int[] addBytes(int[] oldArray, int[]... newArrayArr) {
         int totalLength = oldArray.length;
         for (int[] array : newArrayArr) {
             totalLength += array.length;
