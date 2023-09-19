@@ -2,7 +2,7 @@
 
 #### 企鹅群
 
-<img src="static/qq.png" alt="alt text" width="276" height="319"> 
+<img src="src/main/resources/qq.png" alt="alt text" width="276" height="319"> 
 
 ## Stargazers over time
 
