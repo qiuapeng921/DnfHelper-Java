@@ -1,6 +1,9 @@
 package com.dnf.entity;
 
+import lombok.Data;
+
 // 游戏地图
+@Data
 public class GameMapType {
     public CoordinateType mapCoordinates; // 地图坐标
     public boolean left; // 地图左边
