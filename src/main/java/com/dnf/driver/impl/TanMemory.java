@@ -1,10 +1,10 @@
 package com.dnf.driver.impl;
 
-import com.dnf.driver.Memory;
+import com.dnf.driver.ReadWrite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TanMemory implements Memory {
+public class TanMemory implements ReadWrite {
     private final Logger logger = LoggerFactory.getLogger(TanMemory.class.getName());
 
     private int processId;
@@ -15,7 +15,7 @@ public class TanMemory implements Memory {
     }
 
     @Override
-    public int[] readByteMemory(long address, int size) {
+    public int[] readByte(long address, int size) {
         return new int[0];
     }
 
@@ -45,32 +45,33 @@ public class TanMemory implements Memory {
     }
 
     @Override
-    public boolean writeByteMemory(long address, int[] data) {
+    public boolean writeByte(long address, int[] data) {
         return false;
     }
 
     @Override
-    public void writeShort(long address, short value) {
-
+    public boolean writeShort(long address, short value) {
+        return false;
     }
 
     @Override
-    public void writeInt(long address, int value) {
-
+    public boolean writeInt(long address, int value) {
+        return false;
     }
 
     @Override
-    public void writeLong(long address, long value) {
-
+    public boolean writeLong(long address, long value) {
+        return false;
     }
 
     @Override
-    public void writeFloat(long address, float value) {
-
+    public boolean writeFloat(long address, float value) {
+        return false;
     }
 
     @Override
-    public void writeDouble(long address, double value) {
-
+    public boolean writeDouble(long address, double value) {
+        return false;
     }
+
 }

@@ -1,15 +1,17 @@
 package com.dnf.driver.impl;
 
-import com.dnf.driver.Memory;
+import com.dnf.driver.ReadWrite;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import com.sun.jna.Memory;
 
 @Component
-public class ApiMemory implements Memory {
+public class ApiMemory implements ReadWrite {
     private final Logger logger = LoggerFactory.getLogger(ApiMemory.class.getName());
 
     private int processId;
@@ -26,7 +28,7 @@ public class ApiMemory implements Memory {
     }
 
     public WinNT.HANDLE openProcess() {
-        WinNT.HANDLE handle = kernel32.OpenProcess(0x1F0FFF, false, processId);
+        WinNT.HANDLE handle = kernel32.OpenProcess(Kernel32.PROCESS_ALL_ACCESS, false, processId);
         if (handle == null) {
             logger.error("openProcess pid = {} , error = {}", processId, kernel32.GetLastError());
             return null;
@@ -35,102 +37,136 @@ public class ApiMemory implements Memory {
         return handle;
     }
 
-    @Override
-    public int[] readByteMemory(long address, int size) {
+
+    private Memory readMemory(long address, int size) {
         WinNT.HANDLE handle = openProcess();
         if (handle == null) {
             return null;
         }
 
         try {
-            com.sun.jna.Memory buffer = new com.sun.jna.Memory(size);
-            boolean result = kernel32.ReadProcessMemory(handle, new Pointer(address), buffer, size, null);
+            // 创建缓冲区，并将数据放入其中
+            IntByReference bytesWritten = new IntByReference();
+            Memory buffer = new Memory(size);
+            boolean result = kernel32.ReadProcessMemory(handle, new Pointer(address), buffer, size, bytesWritten);
             if (!result) {
                 throw new Exception(String.format("%d", kernel32.GetLastError()));
             }
-
-            int[] memoryValues = new int[size];
-            for (int i = 0; i < size; i++) {
-                memoryValues[i] = Byte.toUnsignedInt(buffer.getByte(i));
-            }
-
-            return memoryValues;
+            return buffer;
         } catch (Exception e) {
             logger.error("readByteMemory address = {} , error = {}", address, e.getMessage());
+            return null;
         } finally {
             kernel32.CloseHandle(handle);
         }
+    }
 
-        return null;
+    @Override
+    public int[] readByte(long address, int size) {
+        Memory memory = readMemory(address, size);
+        int[] memoryValues = new int[size];
+        for (int i = 0; i < size; i++) {
+            memoryValues[i] = Byte.toUnsignedInt(memory.getByte(i));
+        }
+        return memoryValues;
     }
 
     @Override
     public short readShort(long address) {
-        return 0;
+        Memory memory = readMemory(address, 2);
+        return memory.getShort(0);
     }
 
     @Override
     public int readInt(long address) {
-        return 0;
+        Memory memory = readMemory(address, 4);
+        return memory.getInt(0);
     }
 
     @Override
     public long readLong(long address) {
-        return 0;
+        Memory memory = readMemory(address, 8);
+        return memory.getLong(0);
     }
 
     @Override
     public float readFloat(long address) {
-        return 0;
+        Memory memory = readMemory(address, 4);
+        return memory.getFloat(0);
     }
 
     @Override
     public double readDouble(long address) {
-        return 0;
+        Memory memory = readMemory(address, 8);
+        return memory.getDouble(0);
     }
 
-    @Override
-    public boolean writeByteMemory(long address, int[] data) {
+
+    private boolean writeMemory(long address, Memory memory, int size) {
         WinNT.HANDLE handle = openProcess();
         if (handle == null) {
             return false;
         }
 
-        int size = data.length;
-        com.sun.jna.Memory buffer = new com.sun.jna.Memory(size);
-        buffer.write(0, data, 0, size);
-        boolean result = kernel32.WriteProcessMemory(handle, new Pointer(address), buffer, size, null);
-        if (!result) {
-            int error = kernel32.GetLastError();
-            logger.error("writeMemory:: address = {} , buffer = {} , error = {}", address, buffer, error);
+        try {
+            // 写入数据
+            boolean result = kernel32.WriteProcessMemory(handle, new Pointer(address), memory, size, null);
+            if (!result) {
+                throw new Exception(String.format("%d", kernel32.GetLastError()));
+            }
+            return true;
+        } catch (Exception e) {
+            logger.error("writeByteMemory address = {} , error = {}", address, e.getMessage());
             return false;
+        } finally {
+            kernel32.CloseHandle(handle);
+        }
+    }
+
+    @Override
+    public boolean writeByte(long address, int[] data) {
+        Memory buffer = new Memory(data.length);
+
+        for (int i = 0; i < data.length; i++) {
+            byte b = (byte) (data[i] & 0xFF); // 取低8位字节
+            buffer.setByte(i, b);
         }
 
-        return true;
+        return writeMemory(address, buffer, data.length);
     }
 
     @Override
-    public void writeShort(long address, short value) {
-
+    public boolean writeShort(long address, short value) {
+        Memory buffer = new Memory(2);
+        buffer.setShort(0, value);
+        return writeMemory(address, buffer, 2);
     }
 
     @Override
-    public void writeInt(long address, int value) {
-
+    public boolean writeInt(long address, int value) {
+        Memory buffer = new Memory(4);
+        buffer.setInt(0, value);
+        return writeMemory(address, buffer, 4);
     }
 
     @Override
-    public void writeLong(long address, long value) {
-
+    public boolean writeLong(long address, long value) {
+        Memory buffer = new Memory(8);
+        buffer.setLong(0, value);
+        return writeMemory(address, buffer, 8);
     }
 
     @Override
-    public void writeFloat(long address, float value) {
-
+    public boolean writeFloat(long address, float value) {
+        Memory buffer = new Memory(4);
+        buffer.setFloat(0, value);
+        return writeMemory(address, buffer, 4);
     }
 
     @Override
-    public void writeDouble(long address, double value) {
-
+    public boolean writeDouble(long address, double value) {
+        Memory buffer = new Memory(8);
+        buffer.setDouble(0, value);
+        return writeMemory(address, buffer, 8);
     }
 }
