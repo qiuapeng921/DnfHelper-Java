@@ -41,7 +41,7 @@ public class GameCall {
      */
     public void compileCall(int[] intArr) {
         logger.debug("compiling call {}", intArr);
-        
+
         // 汇编中转, 空白地址, 跳转地址
         long assemblyTransit = Address.NcBhKbAddr + 300;
         long blankAddress = Address.NcBhKbAddr + 500;
@@ -58,35 +58,39 @@ public class GameCall {
         int[] hookData = apiMemory.readByte(hookShell, 19);
         int[] hookOldData = hookData.clone();
 
-        hookData = Bytes.addBytes(hookData, new int[]{72, 184}, Bytes.intToBytes(jumpAddress));
-        hookData = Bytes.addBytes(hookData, new int[]{131, 56, 1, 117, 42, 72, 129, 236, 0, 3, 0, 0});
-        hookData = Bytes.addBytes(hookData, new int[]{72, 187}, Bytes.intToBytes(blankAddress));
-        hookData = Bytes.addBytes(hookData, new int[]{255, 211});
-        hookData = Bytes.addBytes(hookData, new int[]{72, 184}, Bytes.intToBytes(jumpAddress));
-        hookData = Bytes.addBytes(hookData, new int[]{199, 0, 3, 0, 0, 0});
-        hookData = Bytes.addBytes(hookData, new int[]{72, 129, 196, 0, 3, 0, 0});
-        hookData = Bytes.addBytes(hookData, new int[]{255, 37, 0, 0, 0, 0}, Bytes.intToBytes(hookJump));
+        try {
+            hookData = Bytes.addBytes(hookData, new int[]{72, 184}, Bytes.intToBytes(jumpAddress));
+            hookData = Bytes.addBytes(hookData, new int[]{131, 56, 1, 117, 42, 72, 129, 236, 0, 3, 0, 0});
+            hookData = Bytes.addBytes(hookData, new int[]{72, 187}, Bytes.intToBytes(blankAddress));
+            hookData = Bytes.addBytes(hookData, new int[]{255, 211});
+            hookData = Bytes.addBytes(hookData, new int[]{72, 184}, Bytes.intToBytes(jumpAddress));
+            hookData = Bytes.addBytes(hookData, new int[]{199, 0, 3, 0, 0, 0});
+            hookData = Bytes.addBytes(hookData, new int[]{72, 129, 196, 0, 3, 0, 0});
+            hookData = Bytes.addBytes(hookData, new int[]{255, 37, 0, 0, 0, 0}, Bytes.intToBytes(hookJump));
 
-        if (apiMemory.readInt(assemblyTransit) == 0) {
-            apiMemory.writeByte(assemblyTransit, hookData);
+            if (apiMemory.readInt(assemblyTransit) == 0) {
+                apiMemory.writeByte(assemblyTransit, hookData);
+            }
+
+            int[] byteArray = new int[intArr.length];
+            System.arraycopy(intArr, 0, byteArray, 0, intArr.length);
+
+            apiMemory.writeByte(blankAddress, Bytes.addBytes(byteArray, new int[]{195}));
+            int[] hookShellValue = Bytes.addBytes(new int[]{255, 37, 0, 0, 0, 0}, Bytes.intToBytes(assemblyTransit), new int[]{144, 144, 144, 144, 144});
+
+            apiMemory.writeByte(hookShell, hookShellValue);
+
+            apiMemory.writeInt(jumpAddress, 1);
+            while (apiMemory.readInt(jumpAddress) == 1) {
+                Timer.sleep(10);
+            }
+        } catch (Exception e) {
+            logger.error("汇编call执行异常 error = {}", (Object) e.getStackTrace());
+        } finally {
+            apiMemory.writeByte(hookShell, hookOldData);
+            apiMemory.writeByte(blankAddress, new int[intArr.length + 16]);
+            compileCallRun = false;
         }
-
-        int[] byteArray = new int[intArr.length];
-        System.arraycopy(intArr, 0, byteArray, 0, intArr.length);
-
-        apiMemory.writeByte(blankAddress, Bytes.addBytes(byteArray, new int[]{195}));
-        int[] hookShellValue = Bytes.addBytes(new int[]{255, 37, 0, 0, 0, 0}, Bytes.intToBytes(assemblyTransit), new int[]{144, 144, 144, 144, 144});
-
-        apiMemory.writeByte(hookShell, hookShellValue);
-
-        apiMemory.writeInt(jumpAddress, 1);
-        while (apiMemory.readInt(jumpAddress) == 1) {
-            Timer.sleep(10);
-        }
-
-        apiMemory.writeByte(hookShell, hookOldData);
-        apiMemory.writeByte(blankAddress, new int[intArr.length + 16]);
-        compileCallRun = false;
     }
 
 
