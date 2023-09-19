@@ -13,8 +13,7 @@ public class GameCall {
 
     @Resource
     private ApiMemory apiMemory;
-
-    private boolean compileCallRun;
+    private static boolean compileCallRun;
 
     public int[] subRsp(int i) {
         if (i > 127) {
