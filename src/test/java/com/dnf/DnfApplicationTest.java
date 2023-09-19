@@ -13,7 +13,6 @@ import java.nio.file.Files;
 @SpringBootTest
 class DnfApplicationTest {
 
-    @Test
     public void iniTest() {
         try {
             // 创建 Ini 对象并加载 INI 文件

@@ -81,6 +81,9 @@ public class ApiMemory implements ReadWrite {
     @Override
     public int[] readByte(long address, int size) {
         Memory memory = readMemory(address, size);
+        if (memory == null){
+            return null;
+        }
         int[] memoryValues = new int[size];
         for (int i = 0; i < size; i++) {
             memoryValues[i] = Byte.toUnsignedInt(memory.getByte(i));
@@ -91,30 +94,45 @@ public class ApiMemory implements ReadWrite {
     @Override
     public short readShort(long address) {
         Memory memory = readMemory(address, 2);
+        if (memory == null){
+            return 0;
+        }
         return memory.getShort(0);
     }
 
     @Override
     public int readInt(long address) {
         Memory memory = readMemory(address, 4);
+        if (memory == null){
+            return 0;
+        }
         return memory.getInt(0);
     }
 
     @Override
     public long readLong(long address) {
         Memory memory = readMemory(address, 8);
+        if (memory == null){
+            return 0;
+        }
         return memory.getLong(0);
     }
 
     @Override
     public float readFloat(long address) {
         Memory memory = readMemory(address, 4);
+        if (memory == null){
+            return 0;
+        }
         return memory.getFloat(0);
     }
 
     @Override
     public double readDouble(long address) {
         Memory memory = readMemory(address, 8);
+        if (memory == null){
+            return 0;
+        }
         return memory.getDouble(0);
     }
 
