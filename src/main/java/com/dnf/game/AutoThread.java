@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Component
 public class AutoThread {
-    private final Logger logger = LoggerFactory.getLogger(AutoThread.class.getName());
+    Logger logger = LoggerFactory.getLogger(AutoThread.class.getName());
 
     private boolean autoSwitch;
 
