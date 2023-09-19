@@ -58,14 +58,14 @@ public class Bytes {
         return result;
     }
 
-//    public static <T> T bytesToInt(T value) {
-//        return 1;
-//    }
-//
-//
-//    public static <T> T bytesToFloat(T value) {
-//        return T;
-//    }
+    public static <T> T bytesToInt(T value) {
+        return null;
+    }
+
+
+    public static <T> T bytesToFloat(T value) {
+        return null;
+    }
 
     /**
      * 将多个字节数组连接在一起

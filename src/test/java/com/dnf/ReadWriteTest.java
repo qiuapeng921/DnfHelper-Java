@@ -2,11 +2,6 @@ package com.dnf;
 
 import com.dnf.driver.impl.ApiMemory;
 import com.dnf.helper.Process;
-import com.sun.jna.Memory;
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinNT;
-import com.sun.jna.ptr.IntByReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +32,8 @@ public class ReadWriteTest {
         double d = apiMemory.readDouble(address);
         System.out.println("d = " + d);
 
-        apiMemory.writeInt(address, 1000);
+        boolean b1 = apiMemory.writeInt(address, 1000);
+        System.out.println("b1 = " + b1);
 
         boolean b = apiMemory.writeByte(address, new int[]{77, 90, 144, 0, 3, 0, 0, 0, 4, 1});
 

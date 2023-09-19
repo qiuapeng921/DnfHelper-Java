@@ -2,18 +2,18 @@ package com.dnf.game;
 
 import cn.hutool.core.date.DateUtil;
 import com.dnf.driver.impl.ApiMemory;
+import com.dnf.helper.Process;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.Win32VK;
 import com.sun.jna.platform.win32.WinUser;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.Win32VK;
-import com.dnf.helper.Process;
 
 @Component
 public class Initialize {
-    private final Logger logger = LoggerFactory.getLogger(Initialize.class.getName());
+    Logger logger = LoggerFactory.getLogger(Initialize.class.getName());
 
     @Resource
     private ApiMemory apiMemory;

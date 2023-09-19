@@ -1,14 +1,11 @@
 package com.dnf.driver.impl;
 
 import com.dnf.driver.ReadWrite;
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.BaseTSD;
-import com.sun.jna.platform.win32.WinNT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TanMemory implements ReadWrite {
-    private final Logger logger = LoggerFactory.getLogger(TanMemory.class.getName());
+    Logger logger = LoggerFactory.getLogger(TanMemory.class.getName());
 
     private int processId;
 

@@ -3,10 +3,13 @@ package com.dnf.game;
 import com.dnf.driver.impl.ApiMemory;
 import com.dnf.entity.CoordinateType;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapData {
+    Logger logger = LoggerFactory.getLogger(MapData.class.getName());
 
     @Resource
     private ApiMemory apiMemory;
