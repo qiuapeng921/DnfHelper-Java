@@ -41,8 +41,8 @@ public class Traverse extends Base {
                 data.objNameB = Strings.unicodeToAscii(goodsNameByte);
 
                 if (data.objPtr != data.rwAddr) {
-                    int resAddr = mapData.decode(data.objPtr + Address.FbSqAddr);
-                    sendPack.pickUp(resAddr);
+                    int resAddress = mapData.decode(data.objPtr + Address.FbSqAddr);
+                    sendPack.pickUp(resAddress);
                 }
             }
         }

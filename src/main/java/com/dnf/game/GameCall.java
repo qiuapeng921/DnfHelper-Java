@@ -168,25 +168,27 @@ public class GameCall extends Base {
      * @param mapNum long
      */
 
-    public void areaCall(long mapNum) {
-        long regionAddr = memory.readLong(Address.QyParamAddr);
+    public void areaCall(int mapNum) {
+        long regionAddress = memory.readLong(Address.QyParamAddr);
         long tmpRegionCall = Address.QyCallAddr;
-        int[] shellCode = new int[]{72, 131, 236, 48};
-        shellCode = Bytes.addBytes(shellCode, new int[]{65, 184}, Bytes.intToBytes(mapNum));
+        int[] shellCode = subRsp(48);
+        shellCode = Bytes.addBytes(shellCode, Bytes.addBytes(new int[]{65, 184}, Bytes.intToBytes(mapNum)));
         shellCode = Bytes.addBytes(shellCode, new int[]{186, 174, 12, 0, 0});
         shellCode = Bytes.addBytes(shellCode, new int[]{72, 184, 255, 255, 255, 255, 0, 0, 0, 0});
-        shellCode = Bytes.addBytes(shellCode, new int[]{76, 185}, Bytes.intToBytes(Address.QyParamAddr));
+        shellCode = Bytes.addBytes(shellCode, Bytes.addBytes(new int[]{72, 185}, Bytes.intToBytes(Address.QyParamAddr)));
         shellCode = Bytes.addBytes(shellCode, new int[]{72, 139, 9});
-        shellCode = Bytes.addBytes(shellCode, new int[]{76, 139, 201, 73, 129, 193}, Bytes.intToBytes((int) Address.QyPyAddr), new int[]{73, 131, 233, 64});
-        shellCode = Bytes.addBytes(shellCode, new int[]{72, 184}, Bytes.intToBytes(tmpRegionCall));
-        shellCode = Bytes.addBytes(shellCode, new int[]{255, 208});
-        shellCode = Bytes.addBytes(shellCode, new int[]{72, 131, 196, 48});
+
+        shellCode = Bytes.addBytes(shellCode, new int[]{76, 139, 201, 73, 129, 193});
+        shellCode = Bytes.addBytes(shellCode, Bytes.intToBytes((int) Address.QyPyAddr), new int[]{73, 131, 233, 64});
+
+        shellCode = Bytes.addBytes(shellCode, Bytes.addBytes(new int[]{72, 184}, Bytes.intToBytes(tmpRegionCall)));
+        shellCode = Bytes.addBytes(shellCode, new int[]{255, 208}, addRsp(48));
         compileCall(shellCode);
-        int maxRegion = memory.readInt(regionAddr + Address.QyPyAddr);
-        int minRegion = memory.readInt(regionAddr + Address.QyPyAddr + 4);
-        int townX = memory.readInt(regionAddr + Address.QyPyAddr + 8);
-        int townY = memory.readInt(regionAddr + Address.QyPyAddr + 12);
-        MoveCall(maxRegion, minRegion, townX, townY);
+        int maxRegion = memory.readInt(regionAddress + Address.QyPyAddr);
+        int minRegion = memory.readInt(regionAddress + Address.QyPyAddr + 4);
+        int townX = memory.readInt(regionAddress + Address.QyPyAddr + 8);
+        int townY = memory.readInt(regionAddress + Address.QyPyAddr + 12);
+        moveCall(maxRegion, minRegion, townX, townY);
     }
 
     /**
@@ -197,7 +199,7 @@ public class GameCall extends Base {
      * @param x      int
      * @param y      int
      */
-    public void MoveCall(int maxMap, int mixMap, int x, int y) {
+    public void moveCall(int maxMap, int mixMap, int x, int y) {
         long rolePtr = memory.readLong(Address.JSPtrAddr); // 角色指针
         memory.writeInt(Address.CzSyRdxAddr, maxMap);
         memory.writeInt(Address.CzSyRdxAddr + 4, mixMap);

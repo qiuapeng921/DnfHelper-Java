@@ -1,5 +1,6 @@
 package com.dnf.game;
 
+import com.dnf.entity.GlobalData;
 import com.dnf.entity.MapDataType;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
@@ -60,7 +61,7 @@ public class AutoThread extends Base {
 
             // 进入副本
             if (mapData.getStat() == 2) {
-                enterMap(104, 4);
+                enterMap(GlobalData.mapId, GlobalData.mapLevel);
                 continue;
             }
 
@@ -90,12 +91,13 @@ public class AutoThread extends Base {
                 if (mapData.isBossRoom() && mapData.isPass()) {
                     // 捡物品
                     traverse.packPickup();
+                    // 刷图计次
+                    passBoss();
                     // 退出副本
                     quitMap();
                     firstEnterMap = false;
                 }
             }
-
         }
     }
 
@@ -104,13 +106,41 @@ public class AutoThread extends Base {
      */
     private void enterTown() {
 
+        Timer.sleep(500);
+        sendPack.selectRole(1);
+        Timer.sleep(500);
+        logger.info("开始第 [ {} ] 个角色,剩余疲劳 [ {} ]", 1, mapData.getPl());
+
+        while (autoSwitch) {
+            logger.debug("城镇循环");
+            Timer.sleep(300);
+            // 进入城镇跳出循环
+            if (mapData.getStat() == 1) {
+                break;
+            }
+        }
     }
 
     /**
      * 城镇处理
      */
     private void townHandle() {
+        if (mapData.getPl() < 8) {
+            backToRole();
+            return;
+        }
 
+        Timer.sleep(500);
+
+        // 取配置 int 地图 剧情逻辑 todo
+
+        GlobalData.mapId = 104;
+        GlobalData.mapLevel = 5;
+
+        Timer.sleep(500);
+        gamecall.areaCall(GlobalData.mapId);
+        Timer.sleep(500);
+        selectMap();
     }
 
     /**
@@ -122,6 +152,20 @@ public class AutoThread extends Base {
             Timer.sleep(200);
             sendPack.selectMap();
             if (mapData.getStat() == 2 || mapData.getStat() == 3) {
+                break;
+            }
+        }
+    }
+
+    // 返回角色
+    private void backToRole() {
+        logger.info("疲劳值不足 · 即将切换角色");
+        Timer.sleep(200);
+        sendPack.returnRole();
+        while (autoSwitch) {
+            logger.debug("返回角色循环");
+            Timer.sleep(200);
+            if (mapData.getStat() == 0) {
                 break;
             }
         }
@@ -186,6 +230,24 @@ public class AutoThread extends Base {
      * 退出地图
      */
     private void quitMap() {
+        Timer.sleep(200);
+        Random random = new Random();
+        int num = random.nextInt(4);
+        sendPack.getIncome(0, num);
 
+        while (autoSwitch) {
+            logger.debug("退出副本-处理");
+            Timer.sleep(200);
+            // 捡物品
+            traverse.packPickup();
+
+            // 退出地图
+            sendPack.leaveMap();
+
+            // 在城镇或者选图跳出循环
+            if (mapData.getStat() == 1 || mapData.getStat() == 2 || mapData.isTown()) {
+                break;
+            }
+        }
     }
 }

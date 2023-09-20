@@ -66,6 +66,6 @@ public class Screen extends Base {
 
     public void screenKill() {
         gameCall.skillCall(0, 54141, 0, 0, 0, 0, 1.0F);
-        logger.info("秒杀完毕 [ √ ]");
+        logger.info("秒杀完毕 - [ √ ]");
     }
 }
