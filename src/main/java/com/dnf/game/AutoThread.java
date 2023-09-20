@@ -13,6 +13,8 @@ import java.util.Random;
 public class AutoThread extends Base {
     static boolean firstEnterMap; // 首次进图
 
+    static int completedNum;
+
     @Resource
     private MapData mapData;
 
@@ -148,7 +150,7 @@ public class AutoThread extends Base {
         //  1 剧情 2 搬砖  todo
         int autoModel = 1;
         if (autoModel == 1 && mapData.getRoleLevel() < 110) {
-            GlobalData.mapId = task.handleTask();
+            GlobalData.mapId = 105;// task.handleTask();
             GlobalData.mapLevel = 0;
         }
 
@@ -259,7 +261,8 @@ public class AutoThread extends Base {
      * 通过boss
      */
     private void passBoss() {
-
+        completedNum++;
+        logger.info("{} [ {} ] 剩余疲劳 [ {} ]", mapData.getMapName(), completedNum, mapData.getPl());
     }
 
     /**

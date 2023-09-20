@@ -17,6 +17,22 @@ public class GameMap extends Base {
     @Resource
     private MapData mapData;
 
+    private static MapNodeType getMapNodeType(CoordinateType mapEnd, CoordinateType waitHandleCoordinate, MapNodeType tmpNode) {
+        int guessG;
+        if (waitHandleCoordinate.x == tmpNode.currentCoordinates.x || waitHandleCoordinate.y == tmpNode.currentCoordinates.y) {
+            guessG = 10;
+        } else {
+            guessG = 14;
+        }
+        MapNodeType waitHandleNode = new MapNodeType();
+        waitHandleNode.setG(tmpNode.g + guessG);
+        waitHandleNode.setH(Math.toIntExact(Math.toIntExact(mapEnd.x) - Math.toIntExact(waitHandleCoordinate.x * 10L) + (mapEnd.y) - Math.toIntExact(waitHandleCoordinate.y * 10L)));
+        waitHandleNode.setF(waitHandleNode.g + waitHandleNode.getH());
+        waitHandleNode.setCurrentCoordinates(waitHandleCoordinate);
+        waitHandleNode.setFinalCoordinates(tmpNode.currentCoordinates);
+        return waitHandleNode;
+    }
+
     /**
      * 获取方向
      *
@@ -60,9 +76,7 @@ public class GameMap extends Base {
         // 方向集合
         int[][] directionSet = {{0, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 1, 1, 0}, {1, 0, 0, 0}, {1, 1, 0, 0}, {1, 0, 1, 0}, {1, 1, 1, 0}, {0, 0, 0, 1}, {0, 1, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 0, 0, 1}, {1, 1, 0, 1}, {1, 0, 1, 1}, {1, 1, 1, 1}};
         if (fx <= 15) {
-            for (int i = 0; i < 4; i++) {
-                directionArr[i] = directionSet[tx][i];
-            }
+            System.arraycopy(directionSet[tx], 0, directionArr, 0, 4);
         } else {
             for (int i = 0; i < 4; i++) {
                 directionArr[i] = 0;
@@ -80,13 +94,13 @@ public class GameMap extends Base {
      */
     public int tidyCoordinate(List<CoordinateType> simulationRoute, List<CoordinateType> realityRoute) {
         int x, y, k = 0;
-        for (int i = 0; i < simulationRoute.size(); i++) {
+        for (CoordinateType coordinateType : simulationRoute) {
             CoordinateType tempCoordinates = new CoordinateType();
-            x = (simulationRoute.get(i).x + 2) % 3;
-            y = (simulationRoute.get(i).y + 2) % 3;
+            x = (coordinateType.x + 2) % 3;
+            y = (coordinateType.y + 2) % 3;
             if (x == 0 && y == 0) {
-                tempCoordinates.x = (simulationRoute.get(i).x + 2) / 3 - 1;
-                tempCoordinates.y = (simulationRoute.get(i).y + 2) / 3 - 1;
+                tempCoordinates.x = (coordinateType.x + 2) / 3 - 1;
+                tempCoordinates.y = (coordinateType.y + 2) / 3 - 1;
                 realityRoute.add(k, tempCoordinates);
                 k++;
             }
@@ -121,7 +135,6 @@ public class GameMap extends Base {
         data.consumeFatigue = getRoute(data.mapChannel, data.width, data.height, data.startZb, data.endZb, data.mapRoute);
         return data;
     }
-
 
     /**
      * 获取走法
@@ -254,7 +267,7 @@ public class GameMap extends Base {
         }
         List<CoordinateType> moveArr = new ArrayList<>();
 
-        while (true) {
+        do {
             int minF = 0;
             for (int y = 0; y < openList.size(); y++) {
                 if (minF == 0) {
@@ -282,7 +295,7 @@ public class GameMap extends Base {
             for (int y = 0; y < closeList.size(); y++) {
                 if (closeList.get(y).currentCoordinates.x == mapEnd.x && closeList.get(y).currentCoordinates.y == mapEnd.y) {
                     MapNodeType waitHandleNode = closeList.get(y);
-                    while (true) {
+                    do {
                         for (MapNodeType mapNodeType : closeList) {
                             if (mapNodeType.currentCoordinates.x == waitHandleNode.finalCoordinates.x && mapNodeType.currentCoordinates.y == waitHandleNode.finalCoordinates.y) {
                                 waitHandleNode = mapNodeType;
@@ -294,10 +307,7 @@ public class GameMap extends Base {
                             moveArr.add(0, waitHandleNode.currentCoordinates);
                         }
 
-                        if (waitHandleNode.currentCoordinates.x == mapStart.x && waitHandleNode.currentCoordinates.y == mapStart.y) {
-                            break;
-                        }
-                    }
+                    } while (waitHandleNode.currentCoordinates.x != mapStart.x || waitHandleNode.currentCoordinates.y != mapStart.y);
                     moveArr.add(0, mapStart);
                     moveArr.add(mapEnd);
                     return moveArr;
@@ -353,26 +363,12 @@ public class GameMap extends Base {
                     }
                 }
                 if (!existOpenList) {
-                    int guessG;
-                    if (waitHandleCoordinate.x == tmpNode.currentCoordinates.x || waitHandleCoordinate.y == tmpNode.currentCoordinates.y) {
-                        guessG = 10;
-                    } else {
-                        guessG = 14;
-                    }
-                    MapNodeType waitHandleNode = new MapNodeType();
-                    waitHandleNode.setG(tmpNode.g + guessG);
-                    waitHandleNode.setH(Math.toIntExact(Math.toIntExact(mapEnd.x) - Math.toIntExact(waitHandleCoordinate.x * 10L) + (mapEnd.y) - Math.toIntExact(waitHandleCoordinate.y * 10L)));
-                    waitHandleNode.setF(waitHandleNode.g + waitHandleNode.getH());
-                    waitHandleNode.setCurrentCoordinates(waitHandleCoordinate);
-                    waitHandleNode.setFinalCoordinates(tmpNode.currentCoordinates);
+                    MapNodeType waitHandleNode = getMapNodeType(mapEnd, waitHandleCoordinate, tmpNode);
                     openList.add(0, waitHandleNode);
                 }
 
             }
-            if (openList.isEmpty()) {
-                break;
-            }
-        }
+        } while (!openList.isEmpty());
         return moveArr;
     }
 }
