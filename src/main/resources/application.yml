@@ -1,5 +1,7 @@
 logging:
   level:
-    com.dnf: info
-#    com.dnf.game: info
-#    com.dnf.driver: error
+    com.dnf.game: info
+    com.dnf.driver: error
+spring:
+  main:
+    banner-mode: off
