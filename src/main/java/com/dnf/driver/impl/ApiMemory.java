@@ -1,6 +1,6 @@
 package com.dnf.driver.impl;
 
-import com.dnf.driver.ReadWrite;
+import com.dnf.driver.ReadWriteMemory;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.BaseTSD;
@@ -9,10 +9,8 @@ import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ApiMemory implements ReadWrite {
+public class ApiMemory implements ReadWriteMemory {
     private final Kernel32 kernel32;
     Logger logger = LoggerFactory.getLogger(ApiMemory.class.getName());
     private int processId;

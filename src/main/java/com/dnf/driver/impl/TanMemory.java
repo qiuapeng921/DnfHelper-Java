@@ -1,10 +1,10 @@
 package com.dnf.driver.impl;
 
-import com.dnf.driver.ReadWrite;
+import com.dnf.driver.ReadWriteMemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TanMemory implements ReadWrite {
+public class TanMemory implements ReadWriteMemory {
     Logger logger = LoggerFactory.getLogger(TanMemory.class.getName());
 
     private int processId;

@@ -1,6 +1,6 @@
 package com.dnf.game;
 
-import com.dnf.driver.impl.ApiMemory;
+import com.dnf.driver.ReadWriteMemory;
 import com.dnf.entity.CoordinateType;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
@@ -13,7 +13,7 @@ public class Screen {
     Logger logger = LoggerFactory.getLogger(Screen.class.getName());
 
     @Resource
-    private ApiMemory apiMemory;
+    private ReadWriteMemory memory;
 
     @Resource
     private GameCall gameCall;
@@ -46,21 +46,21 @@ public class Screen {
         }
 
         long personPtr = gameCall.personPtr();
-        long map = apiMemory.readLong(apiMemory.readLong(personPtr + Address.DtPyAddr) + 16);
-        long start = apiMemory.readLong(map + Address.DtKs2);
-        long end = apiMemory.readLong(map + Address.DtJs2);
+        long map = memory.readLong(memory.readLong(personPtr + Address.DtPyAddr) + 16);
+        long start = memory.readLong(map + Address.DtKs2);
+        long end = memory.readLong(map + Address.DtJs2);
         long objNum = (end - start) / 24;
 
         int num = 0;
 
         for (long i = 1; i <= objNum; i++) {
             long objPtr = mapData.getTraversalPtr(start, i, 2);
-            int objType = apiMemory.readInt(objPtr + Address.LxPyAddr);
-            int objCamp = apiMemory.readInt(objPtr + Address.ZyPyAddr);
+            int objType = memory.readInt(objPtr + Address.LxPyAddr);
+            int objCamp = memory.readInt(objPtr + Address.ZyPyAddr);
 
-            int obj_code = apiMemory.readInt(objPtr + Address.DmPyAddr);
+            int obj_code = memory.readInt(objPtr + Address.DmPyAddr);
             if (objType == 529 || objType == 545 || objType == 273 || objType == 61440) {
-                long obj_blood = apiMemory.readLong(objPtr + Address.GwXlAddr);
+                long obj_blood = memory.readLong(objPtr + Address.GwXlAddr);
                 if (objCamp > 0 && obj_code > 0 && obj_blood > 0 && objPtr != personPtr) {
                     CoordinateType monster = mapData.readCoordinate(objPtr);
                     gameCall.skillCall(personPtr, 70231, 999999, monster.x, monster.y, 0, 1.0F);

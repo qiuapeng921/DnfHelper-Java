@@ -1,6 +1,6 @@
 package com.dnf.game;
 
-import com.dnf.driver.impl.ApiMemory;
+import com.dnf.driver.ReadWriteMemory;
 import com.dnf.entity.CoordinateType;
 import com.dnf.helper.Strings;
 import jakarta.annotation.Resource;
@@ -13,7 +13,7 @@ public class MapData {
     Logger logger = LoggerFactory.getLogger(MapData.class.getName());
 
     @Resource
-    private ApiMemory apiMemory;
+    private ReadWriteMemory memory;
 
     @Resource
     private GameCall gameCall;
@@ -25,7 +25,7 @@ public class MapData {
      * @param value   int 数值
      */
     public void encode(long address, int value) {
-        apiMemory.writeInt(address, value);
+        memory.writeInt(address, value);
     }
 
     /**
@@ -35,7 +35,7 @@ public class MapData {
      * @return int
      */
     public int decode(long address) {
-        return apiMemory.readInt(address);
+        return memory.readInt(address);
     }
 
     /**
@@ -44,7 +44,7 @@ public class MapData {
      * @return int 0选角 1城镇 2选图 3图内 5选择频道
      */
     public int getStat() {
-        return apiMemory.readInt(Address.YXZTAddr);
+        return memory.readInt(Address.YXZTAddr);
     }
 
 
@@ -55,13 +55,13 @@ public class MapData {
      */
     public boolean isTown() {
         long personPtr = gameCall.personPtr();
-        return apiMemory.readInt(personPtr + Address.DtPyAddr) == 0;
+        return memory.readInt(personPtr + Address.DtPyAddr) == 0;
     }
 
 
     public boolean isOpenDoor() {
         long personPtr = gameCall.personPtr();
-        long encodeData = apiMemory.readLong(apiMemory.readLong(personPtr + Address.DtPyAddr) + 16);
+        long encodeData = memory.readLong(memory.readLong(personPtr + Address.DtPyAddr) + 16);
         return decode(encodeData + Address.SfKmAddr) == 0;
     }
 
@@ -78,9 +78,9 @@ public class MapData {
      */
     public CoordinateType getCutRoom() {
         CoordinateType result = new CoordinateType();
-        long roomData = apiMemory.readLong(apiMemory.readLong(apiMemory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
-        result.x = apiMemory.readInt(roomData + Address.CutRoomXAddr);
-        result.y = apiMemory.readInt(roomData + Address.CutRoomYAddr);
+        long roomData = memory.readLong(memory.readLong(memory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
+        result.x = memory.readInt(roomData + Address.CutRoomXAddr);
+        result.y = memory.readInt(roomData + Address.CutRoomYAddr);
         return result;
     }
 
@@ -91,7 +91,7 @@ public class MapData {
      */
     public CoordinateType getBossRoom() {
         CoordinateType result = new CoordinateType();
-        long roomData = apiMemory.readLong(apiMemory.readLong(apiMemory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
+        long roomData = memory.readLong(memory.readLong(memory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
         result.x = decode(roomData + Address.BOSSRoomXAddr);
         result.y = decode(roomData + Address.BOSSRoomYAddr);
         return result;
@@ -103,8 +103,8 @@ public class MapData {
      * @return boolean
      */
     public boolean isPass() {
-        long roomData = apiMemory.readLong(apiMemory.readLong(apiMemory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
-        int dataVal = apiMemory.readInt(roomData + Address.GouHuoAddr);
+        long roomData = memory.readLong(memory.readLong(memory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
+        int dataVal = memory.readInt(roomData + Address.GouHuoAddr);
         return dataVal == 2 || dataVal == 0;
     }
 
@@ -123,7 +123,7 @@ public class MapData {
      * @return int
      */
     public int getRoleLevel() {
-        return apiMemory.readInt(Address.JSDjAddr);
+        return memory.readInt(Address.JSDjAddr);
     }
 
     /**
@@ -132,8 +132,8 @@ public class MapData {
      * @return string
      */
     public String getMapName() {
-        long roomData = apiMemory.readLong(apiMemory.readLong(apiMemory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
-        int[] mapByte = apiMemory.readByte(apiMemory.readLong(roomData + Address.DtMcAddr), 52);
+        long roomData = memory.readLong(memory.readLong(memory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
+        int[] mapByte = memory.readByte(memory.readLong(roomData + Address.DtMcAddr), 52);
         return Strings.unicodeToAscii(mapByte);
     }
 
@@ -145,30 +145,30 @@ public class MapData {
      */
     public CoordinateType readCoordinate(long param) {
         CoordinateType coordinate = new CoordinateType();
-        if (apiMemory.readInt(param + Address.LxPyAddr) == 273) {
-            long ptr = apiMemory.readLong(param + Address.DqZbAddr);
-            coordinate.setX((int) apiMemory.readFloat(ptr));
-            coordinate.setY((int) apiMemory.readFloat(ptr + 4));
-            coordinate.setZ((int) apiMemory.readFloat(ptr + 8));
+        if (memory.readInt(param + Address.LxPyAddr) == 273) {
+            long ptr = memory.readLong(param + Address.DqZbAddr);
+            coordinate.setX((int) memory.readFloat(ptr));
+            coordinate.setY((int) memory.readFloat(ptr + 4));
+            coordinate.setZ((int) memory.readFloat(ptr + 8));
         } else {
-            long ptr = apiMemory.readLong(param + Address.FxPyAddr);
-            coordinate.setX((int) apiMemory.readFloat(ptr + 32));
-            coordinate.setY((int) apiMemory.readFloat(ptr + 36));
-            coordinate.setZ((int) apiMemory.readFloat(ptr + 40));
+            long ptr = memory.readLong(param + Address.FxPyAddr);
+            coordinate.setX((int) memory.readFloat(ptr + 32));
+            coordinate.setY((int) memory.readFloat(ptr + 36));
+            coordinate.setZ((int) memory.readFloat(ptr + 40));
         }
         return coordinate;
     }
 
     public boolean isDialogA() {
-        return apiMemory.readInt(Address.DHAddr) == 1;
+        return memory.readInt(Address.DHAddr) == 1;
     }
 
     public boolean isDialogB() {
-        return apiMemory.readInt(Address.DHAddrB) == 1;
+        return memory.readInt(Address.DHAddrB) == 1;
     }
 
     public boolean isDialogEsc() {
-        return apiMemory.readInt(Address.EscDHAddr) == 1;
+        return memory.readInt(Address.EscDHAddr) == 1;
     }
 
     /**
@@ -178,7 +178,7 @@ public class MapData {
      */
     public int backpackWeight() {
         long personPtr = gameCall.personPtr();
-        long backPackPtr = apiMemory.readLong(personPtr + Address.WplAddr);
+        long backPackPtr = memory.readLong(personPtr + Address.WplAddr);
         int cutWeight = decode(backPackPtr + Address.DqFzAddr);
         int maxWeight = decode(personPtr + Address.ZdFzAddr);
         float result = (float) cutWeight / maxWeight * 100;
@@ -193,7 +193,7 @@ public class MapData {
      */
     public int getFame() {
         long personPtr = gameCall.personPtr();
-        return apiMemory.readInt(personPtr + Address.RwMwAddr);
+        return memory.readInt(personPtr + Address.RwMwAddr);
     }
 
     /**
@@ -208,13 +208,13 @@ public class MapData {
         long result = 0;
 
         if (t == 1) {
-            long one = apiMemory.readLong(ptr + (offset - 1) * 8L);
-            long two = apiMemory.readLong(one - 72);
-            result = apiMemory.readLong(two + 16);
+            long one = memory.readLong(ptr + (offset - 1) * 8L);
+            long two = memory.readLong(one - 72);
+            result = memory.readLong(two + 16);
         }
         if (t == 2) {
-            long one = apiMemory.readLong(ptr + (offset - 1) * 24L);
-            result = apiMemory.readLong(one + 16) - 32;
+            long one = memory.readLong(ptr + (offset - 1) * 24L);
+            result = memory.readLong(one + 16) - 32;
         }
 
         logger.debug("取遍历指针: {}", result);

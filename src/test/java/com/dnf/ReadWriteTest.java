@@ -1,6 +1,6 @@
 package com.dnf;
 
-import com.dnf.driver.impl.ApiMemory;
+import com.dnf.driver.ReadWriteMemory;
 import com.dnf.helper.Process;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ReadWriteTest {
 
     @Autowired
-    private ApiMemory apiMemory;
+    private ReadWriteMemory apiMemory;
 
     @Test
     public void test() {
@@ -19,7 +19,7 @@ public class ReadWriteTest {
         // 设置全局进程id
         apiMemory.setProcessId(processId);
 
-        long address = 0x00600000L;
+        long address = 0x00400000L;
 
         long s = apiMemory.readShort(address);
         System.out.println("s = " + s);

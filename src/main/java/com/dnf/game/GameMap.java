@@ -1,6 +1,6 @@
 package com.dnf.game;
 
-import com.dnf.driver.impl.ApiMemory;
+import com.dnf.driver.ReadWriteMemory;
 import com.dnf.entity.CoordinateType;
 import com.dnf.entity.GameMapType;
 import com.dnf.entity.MapDataType;
@@ -18,7 +18,7 @@ public class GameMap {
     Logger logger = LoggerFactory.getLogger(GameMap.class.getName());
 
     @Resource
-    private ApiMemory apiMemory;
+    private ReadWriteMemory memory;
 
     @Resource
     private MapData mapData;
@@ -101,7 +101,7 @@ public class GameMap {
     }
 
     public MapDataType mapData() {
-        ApiMemory mem = apiMemory;
+        ReadWriteMemory mem = memory;
         MapDataType data = new MapDataType();
         //(房间编号)+时间地址)+
         long roomData = mem.readLong(mem.readLong(mem.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);

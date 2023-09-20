@@ -1,6 +1,6 @@
 package com.dnf.driver;
 
-public interface ReadWrite {
+public interface ReadWriteMemory {
     void setProcessId(int processId);
 
     long allocate(int size);
