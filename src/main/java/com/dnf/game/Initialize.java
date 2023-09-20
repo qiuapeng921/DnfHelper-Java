@@ -53,11 +53,9 @@ public class Initialize extends Base {
                 int hotkeyId = msg.wParam.intValue();
                 if (hotkeyId == Win32VK.VK_F1.code) {
                     screen.screenSwitch();
-                }
-                if (hotkeyId == Win32VK.VK_END.code) {
+                } else if (hotkeyId == Win32VK.VK_END.code) {
                     autoThread.autoSwitch();
-                }
-                if (hotkeyId == Win32VK.VK_OEM_3.code) {
+                } else if (hotkeyId == Win32VK.VK_OEM_3.code) {
                     screen.screenKill();
                 }
             } else {
