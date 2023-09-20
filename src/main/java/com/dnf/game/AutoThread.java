@@ -1,23 +1,15 @@
 package com.dnf.game;
 
-import com.dnf.driver.ReadWriteMemory;
 import com.dnf.entity.MapDataType;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
 @Component
-public class AutoThread {
+public class AutoThread extends Base {
     static boolean firstEnterMap; // 首次进图
-
-    Logger logger = LoggerFactory.getLogger(AutoThread.class.getName());
-
-    @Resource
-    private ReadWriteMemory memory;
 
     @Resource
     private MapData mapData;

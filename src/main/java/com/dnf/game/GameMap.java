@@ -6,19 +6,13 @@ import com.dnf.entity.GameMapType;
 import com.dnf.entity.MapDataType;
 import com.dnf.entity.MapNodeType;
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class GameMap {
-    Logger logger = LoggerFactory.getLogger(GameMap.class.getName());
-
-    @Resource
-    private ReadWriteMemory memory;
+public class GameMap extends Base {
 
     @Resource
     private MapData mapData;

@@ -1,23 +1,15 @@
 package com.dnf.game;
 
 import cn.hutool.core.date.DateUtil;
-import com.dnf.driver.impl.ApiMemory;
 import com.dnf.helper.Process;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Win32VK;
 import com.sun.jna.platform.win32.WinUser;
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Initialize {
-    Logger logger = LoggerFactory.getLogger(Initialize.class.getName());
-
-    @Resource
-    private ApiMemory apiMemory;
-
+public class Initialize extends Base {
     @Resource
     private AutoThread autoThread;
 
@@ -36,7 +28,7 @@ public class Initialize {
         }
 
         // 设置全局进程id
-        apiMemory.setProcessId(processId);
+        memory.setProcessId(processId);
         initEmptyAddress();
 
         logger.info("加载成功-欢迎使用");
@@ -80,10 +72,10 @@ public class Initialize {
      * 初始化空白地址
      */
     private void initEmptyAddress() {
-        Address.RwKbAddr = apiMemory.allocate(4096);
-        Address.NcBhKbAddr = apiMemory.allocate(4096);
-        Address.JnKbAddr = apiMemory.allocate(4096);
-        Address.GtKbAddr = apiMemory.allocate(4096);
+        Address.RwKbAddr = memory.allocate(4096);
+        Address.NcBhKbAddr = memory.allocate(4096);
+        Address.JnKbAddr = memory.allocate(4096);
+        Address.GtKbAddr = memory.allocate(4096);
 
         logger.info("人物基址 {}", Long.toHexString(Address.RwKbAddr));
         logger.info("内存汇编 {}", Long.toHexString(Address.NcBhKbAddr));

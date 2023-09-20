@@ -1,20 +1,12 @@
 package com.dnf.game;
 
-import com.dnf.driver.ReadWriteMemory;
 import com.dnf.entity.MapTraversalType;
 import com.dnf.helper.Strings;
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Traverse {
-    Logger logger = LoggerFactory.getLogger(Traverse.class.getName());
-
-    @Resource
-    private ReadWriteMemory memory;
-
+public class Traverse extends Base {
     @Resource
     private GameCall gamecall;
 

@@ -1,22 +1,12 @@
 package com.dnf.game;
 
-import com.dnf.driver.ReadWriteMemory;
 import com.dnf.helper.Bytes;
 import com.dnf.helper.Timer;
-import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GameCall {
+public class GameCall extends Base {
     private static boolean compileCallRun;
-    Logger logger = LoggerFactory.getLogger(GameCall.class.getName());
-    @Resource
-    private ReadWriteMemory memory;
-
-    @Resource
-    private MapData mapData;
 
     public int[] subRsp(int i) {
         if (i > 127) {
@@ -228,9 +218,6 @@ public class GameCall {
      * @param fx int 0左 1右 2上 3下
      */
     public void overMapCall(int fx) {
-        if (mapData.isTown()) return;
-        if (!mapData.isOpenDoor()) return;
-
         long emptyAddr = Address.GtKbAddr;
         long roomData = memory.readLong(memory.readLong(memory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.StPyAddr);
         int[] shellCode = new int[]{65, 185, 255, 255, 255, 255};
