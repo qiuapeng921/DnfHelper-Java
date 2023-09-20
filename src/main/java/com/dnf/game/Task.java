@@ -19,7 +19,7 @@ public class Task extends Base {
      * @return long
      */
     public int handleTask() {
-        return 0;
+        return 10;
     }
 
     /**

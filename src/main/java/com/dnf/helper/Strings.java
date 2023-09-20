@@ -70,4 +70,15 @@ public class Strings {
         }
         return sb.toString();
     }
+
+    public static int[] splitToIntArray(String input, String regex) {
+        String[] strArray = input.split(regex);
+        int[] intArray = new int[strArray.length];
+
+        for (int i = 0; i < strArray.length; i++) {
+            intArray[i] = Integer.parseInt(strArray[i]);
+        }
+
+        return intArray;
+    }
 }

@@ -2,6 +2,7 @@ package com.dnf.game;
 
 import com.dnf.entity.GlobalData;
 import com.dnf.entity.MapDataType;
+import com.dnf.helper.Strings;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -27,22 +28,23 @@ public class AutoThread extends Base {
     @Resource
     private SendPack sendPack;
 
-    private boolean autoSwitch;
+    @Resource
+    private Task task;
 
     public void autoSwitch() {
-        if (!autoSwitch) {
+        if (!GlobalData.autoSwitch) {
             Thread thread = new Thread(this::autoThread);
             thread.start();
-            autoSwitch = true;
+            GlobalData.autoSwitch = true;
             logger.info("自动刷图 - [ √ ]");
         } else {
-            autoSwitch = false;
+            GlobalData.autoSwitch = false;
             logger.info("自动刷图 - [ x ]");
         }
     }
 
     private void autoThread() {
-        while (autoSwitch) {
+        while (GlobalData.autoSwitch) {
 
             Timer.sleep(200);
 
@@ -105,13 +107,22 @@ public class AutoThread extends Base {
      * 进入城镇
      */
     private void enterTown() {
+        GlobalData.roleCount++;
+        // 取ini角色数量 todo
+        if (GlobalData.roleCount > 10) {
+            logger.info("指定角色完成所有角色");
+            logger.info("自动刷图 - [ x ]");
+            GlobalData.autoSwitch = false;
+            return;
+        }
 
+        Timer.sleep(200);
+        sendPack.selectRole(GlobalData.roleCount);
         Timer.sleep(500);
-        sendPack.selectRole(1);
-        Timer.sleep(500);
-        logger.info("开始第 [ {} ] 个角色,剩余疲劳 [ {} ]", 1, mapData.getPl());
+        logger.info("进入角色 {} ", GlobalData.roleCount);
+        logger.info("开始第 [ {} ] 个角色,剩余疲劳 [ {} ]", GlobalData.roleCount + 1, mapData.getPl());
 
-        while (autoSwitch) {
+        while (GlobalData.autoSwitch) {
             logger.debug("城镇循环");
             Timer.sleep(300);
             // 进入城镇跳出循环
@@ -131,11 +142,36 @@ public class AutoThread extends Base {
         }
 
         Timer.sleep(500);
+        // 分解装备
+        traverse.handleEquip();
 
-        // 取配置 int 地图 剧情逻辑 todo
+        //  1 剧情 2 搬砖  todo
+        int autoModel = 1;
+        if (autoModel == 1 && mapData.getRoleLevel() < 110) {
+            GlobalData.mapId = task.handleTask();
+            GlobalData.mapLevel = 0;
+        }
 
-        GlobalData.mapId = 104;
-        GlobalData.mapLevel = 5;
+        if (autoModel == 2 && mapData.getRoleLevel() == 110) {
+            int[] mapIds = new int[0];
+            int personFame = mapData.getFame();
+            String numbers = "100002964,100002965,100002950,100002952,100002962,100002705,100002676,400001565";
+            int[] intArray = Strings.splitToIntArray(numbers, ",");
+            if (personFame < 25837) {
+//                mapIds = cfg.Key("普通地图").Int64s(",")
+            } else {
+//                mapIds = cfg.Key("英豪地图").Int64s(",")
+            }
+            Random random = new Random();
+            int index = random.nextInt(mapIds.length);
+            GlobalData.mapId = mapIds[index];
+            GlobalData.mapLevel = 5;
+        }
+
+        if (GlobalData.mapId == 0) {
+            logger.info("地图编号为空,无法切换区域");
+            return;
+        }
 
         Timer.sleep(500);
         gamecall.areaCall(GlobalData.mapId);
@@ -147,7 +183,7 @@ public class AutoThread extends Base {
      * 选择地图
      */
     private void selectMap() {
-        while (autoSwitch) {
+        while (GlobalData.autoSwitch) {
             logger.debug("选图循环");
             Timer.sleep(200);
             sendPack.selectMap();
@@ -162,7 +198,7 @@ public class AutoThread extends Base {
         logger.info("疲劳值不足 · 即将切换角色");
         Timer.sleep(200);
         sendPack.returnRole();
-        while (autoSwitch) {
+        while (GlobalData.autoSwitch) {
             logger.debug("返回角色循环");
             Timer.sleep(200);
             if (mapData.getStat() == 0) {
@@ -192,7 +228,7 @@ public class AutoThread extends Base {
             gamecall.goMapCall(mapId, mapLevel);
         }
 
-        while (autoSwitch) {
+        while (GlobalData.autoSwitch) {
             logger.debug("进入副本循环");
             Timer.sleep(200);
             if (mapData.getStat() == 3) {
@@ -235,7 +271,7 @@ public class AutoThread extends Base {
         int num = random.nextInt(4);
         sendPack.getIncome(0, num);
 
-        while (autoSwitch) {
+        while (GlobalData.autoSwitch) {
             logger.debug("退出副本-处理");
             Timer.sleep(200);
             // 捡物品

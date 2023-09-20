@@ -198,10 +198,10 @@ public class SendPack extends Base {
     /**
      * 组包分解
      *
-     * @param addr 装备位置
+     * @param address 装备位置
      */
-    public void decomposition(int addr) {
-        if (addr < 0) {
+    public void decomposition(int address) {
+        if (address < 0) {
             return;
         }
         hcCall(26);
@@ -209,7 +209,7 @@ public class SendPack extends Base {
         jmCall(65535, 2);
         jmCall(317, 4);
         jmCall(1, 1);
-        jmCall(addr, 2);
+        jmCall(address, 2);
         fbCall();
     }
 
@@ -237,19 +237,16 @@ public class SendPack extends Base {
     /**
      * 整理背包
      *
-     * @param packType 背包类型
-     * @param packAddr 背包地址
+     * @param packType    背包类型
+     * @param packAddress 背包地址
      */
-    public void tidyBackpack(int packType, int packAddr) {
+    public void tidyBackpack(int packType, int packAddress) {
         hcCall(20);
         jmCall(6, 4);
         jmCall(16, 1);
-        // 背包类型:1 装备;2消耗品;3材料;4任务;10副职业
-        jmCall(packType, 1);
-        // 背包地址:0 背包;2个人仓库;12账号金库
-        jmCall(packAddr, 1);
-        // 排序方式:0 栏位排序;1品级排序;2Lv排序;3部位排序
-        jmCall(packAddr, 1);
+        jmCall(packType, 1);    // 背包类型:1 装备;2消耗品;3材料;4任务;10副职业
+        jmCall(packAddress, 1); // 背包地址:0 背包;2个人仓库;12账号金库
+        jmCall(packAddress, 1); // 排序方式:0 栏位排序;1品级排序;2Lv排序;3部位排序
         fbCall();
     }
 

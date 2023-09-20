@@ -1,6 +1,7 @@
 package com.dnf.game;
 
 import com.dnf.entity.CoordinateType;
+import com.dnf.entity.GlobalData;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -13,21 +14,20 @@ public class Screen extends Base {
     @Resource
     private MapData mapData;
 
-    private boolean screenSwitch;
 
     public void screenSwitch() {
-        if (!screenSwitch) {
+        if (!GlobalData.screenSwitch) {
             Thread thread = new Thread(() -> {
-                while (screenSwitch) {
+                while (GlobalData.screenSwitch) {
                     Timer.sleep(300);
                     fullScreen();
                 }
             });
             thread.start();
-            screenSwitch = true;
+            GlobalData.screenSwitch = true;
             logger.info("技能全屏 - [ √ ]");
         } else {
-            screenSwitch = false;
+            GlobalData.screenSwitch = false;
             logger.info("技能全屏 - [ x ]");
         }
     }
