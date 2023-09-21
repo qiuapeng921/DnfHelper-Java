@@ -50,7 +50,7 @@ public class Screen extends Base {
 
         Integer screenCode = iniUtils.read("自动配置", "技能代码", Integer.class);
         Integer screenHarm = iniUtils.read("自动配置", "技能伤害", Integer.class);
-        Integer screenSize = iniUtils.read("自动配置", "技能伤害", Integer.class);
+        Integer screenSize = iniUtils.read("自动配置", "技能大小", Integer.class);
         Integer screenNumber = iniUtils.read("自动配置", "技能个数", Integer.class);
 
         int num = 0;
@@ -65,7 +65,7 @@ public class Screen extends Base {
                 long obj_blood = memory.readLong(objPtr + Address.GwXlAddr);
                 if (objCamp > 0 && obj_code > 0 && obj_blood > 0 && objPtr != personPtr) {
                     CoordinateType monster = mapData.readCoordinate(objPtr);
-                    gameCall.skillCall(personPtr, screenCode, screenHarm, monster.x, monster.y, 0, screenSize);
+                    gameCall.skillCall(personPtr, screenCode, screenHarm, monster.x, monster.y, 0, (float) screenSize);
                     num++;
                     if (num >= screenNumber) break;
                 }

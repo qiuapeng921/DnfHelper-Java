@@ -209,8 +209,6 @@ public class MapData extends Base {
             result = memory.readLong(one + 16) - 32;
         }
 
-        logger.debug("取遍历指针: {}", result);
-
         return result;
     }
 }

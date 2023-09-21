@@ -134,7 +134,8 @@ public class Traverse extends Base {
                     data.objBlood = memory.readLong(data.objPtr + Address.GwXlAddr);
                     if (data.objCamp > 0 && data.objPtr != data.rwAddr) {
                         CoordinateType monster = mapData.readCoordinate(data.objPtr);
-                        data.objNameA = Strings.unicodeToAscii(memory.readByte(memory.readLong(data.objPtr + Address.McPyAddr), 200));
+                        int[] objNameByte = memory.readByte(memory.readLong(data.objPtr + Address.McPyAddr), 200);
+                        data.objNameA = Strings.unicodeToAscii(objNameByte);
                         logger.debug("对象名称:[{}],类型:[{}],阵营:[{}],代码:[{}],血量:[{}],X:[{}],Y:[{}]", data.objNameA, data.objTypeA, data.objCamp, data.objCode, data.objBlood, monster.x, monster.y);
 
                         if (data.objBlood > 0) {
@@ -154,7 +155,7 @@ public class Traverse extends Base {
                                 Button.DriveButton(Win32VK.VK_X.code, 1, false);
                                 Timer.sleep(300);
                                 Button.DriveButton(Win32VK.VK_X.code, 2, false);
-                                gamecall.skillCall(data.rwAddr, code, harm, monster.x, monster.y, 0, size);
+                                gamecall.skillCall(data.rwAddr, code, harm, monster.x, monster.y, 0, (float) size);
                             }
                         }
                     }

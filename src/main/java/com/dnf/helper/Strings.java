@@ -56,19 +56,15 @@ public class Strings {
      * @return 字符串
      */
     public static String unicodeToAscii(int[] unicodeInt) {
-        StringBuilder sb = new StringBuilder();
-        for (int codePoint : unicodeInt) {
-            //无用数据
-            if (codePoint == 0) {
-                continue;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < unicodeInt.length - 1; i += 2) {
+            if (unicodeInt[i] == 0 && unicodeInt[i + 1] == 0) {
+                break;
             }
-            sb.appendCodePoint(codePoint);
-            //反括号
-            if (codePoint == 93) {
-                return sb.toString();
-            }
+            int code = unicodeInt[i + 1] << 8 | unicodeInt[i];
+            stringBuilder.append((char) code);
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     public static int[] splitToIntArray(String input, String regex) {
