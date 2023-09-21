@@ -8,9 +8,10 @@ class IniConfigTest {
 
     @Test
     void write() {
-        IniConfig config = IniConfig.getInstance().setFilename("1111.ini");
-        config.write("刘德华", "年龄", 18);
-        config.write("刘德华", "身高", 174);
-        config.write("刘德华", "体重", 150);
+        IniUtils iniUtils = new IniUtils();
+        iniUtils.setFilename("1111.ini");
+        iniUtils.write("刘德华", "年龄", 18);
+        iniUtils.write("刘德华", "身高", 174);
+        iniUtils.write("刘德华", "体重", 150);
     }
 }

@@ -1,6 +1,5 @@
 package com.dnf.game;
 
-import com.dnf.driver.ReadWriteMemory;
 import com.dnf.entity.CoordinateType;
 import com.dnf.entity.GameMapType;
 import com.dnf.entity.MapDataType;
@@ -109,18 +108,17 @@ public class GameMap extends Base {
     }
 
     public MapDataType mapData() {
-        ReadWriteMemory mem = memory;
         MapDataType data = new MapDataType();
         //(房间编号)+时间地址)+
-        long roomData = mem.readLong(mem.readLong(mem.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
+        long roomData = memory.readLong(memory.readLong(memory.readLong(Address.FJBHAddr) + Address.SJAddr) + Address.MxPyAddr);
         long roomIndex = mapData.decode(roomData + Address.SyPyAddr);
 
-        data.width = mem.readInt(mem.readLong(roomData + Address.KgPyAddr) + roomIndex * 8);
-        data.height = mem.readInt(mem.readLong(roomData + Address.KgPyAddr) + roomIndex * 8 + 4);
-        data.tmp = mem.readLong(mem.readLong(roomData + Address.SzPyAddr) + 32 * roomIndex + 8);
+        data.width = memory.readInt(memory.readLong(roomData + Address.KgPyAddr) + roomIndex * 8);
+        data.height = memory.readInt(memory.readLong(roomData + Address.KgPyAddr) + roomIndex * 8 + 4);
+        data.tmp = memory.readLong(memory.readLong(roomData + Address.SzPyAddr) + 32 * roomIndex + 8);
         data.channelNum = data.width * data.height;
         for (int i = 0; i < data.channelNum; i++) {
-            data.mapChannel.add(i, mem.readInt(data.tmp + i * 4L));
+            data.mapChannel.add(i, memory.readInt(data.tmp + i * 4L));
         }
 
         data.startZb.x = mapData.getCutRoom().x + 1;

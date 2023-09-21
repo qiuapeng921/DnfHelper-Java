@@ -1,8 +1,9 @@
 package com.dnf.game;
 
+import com.dnf.entity.CoordinateType;
 import com.dnf.entity.MapTraversalType;
-import com.dnf.helper.Strings;
-import com.dnf.helper.Timer;
+import com.dnf.helper.*;
+import com.sun.jna.platform.win32.Win32VK;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,9 @@ public class Traverse extends Base {
 
     @Resource
     private SendPack sendPack;
+
+    @Resource
+    private IniUtils iniUtils;
 
     /**
      * 组包拾取
@@ -53,12 +57,10 @@ public class Traverse extends Base {
 
     // HandleEquip 处理装备
     public void handleEquip() {
-//        cfg := helpers.GetConfig().Section("自动配置")
-//        handleType := cfg.Key("处理装备").MustUint64(0)
-//        if handleType == 0 {
-//            return
-//        }
-
+        int handleModel = iniUtils.read("自动配置", "处理装备", Integer.class);
+        if (handleModel == 0) {
+            return;
+        }
         if (mapData.backpackWeight() < 60) {
             return;
         }
@@ -95,5 +97,63 @@ public class Traverse extends Base {
         }
         sendPack.tidyBackpack(0, 0);
         logger.info("处理装备 [ {} ] 件", num);
+    }
+
+
+    public void FollowMonster() {
+
+        if (mapData.getStat() != 3) {
+            return;
+        }
+
+        int followModel = iniUtils.read("自动配置", "跟随打怪", Integer.class);
+        int code = iniUtils.read("自动配置", "技能代码", Integer.class);
+        int harm = iniUtils.read("自动配置", "技能伤害", Integer.class);
+        int size = iniUtils.read("自动配置", "技能大小", Integer.class);
+
+        MapTraversalType data = new MapTraversalType();
+        data.rwAddr = gamecall.personPtr();
+        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
+        data.start = memory.readLong(data.mapData + Address.DtKs2);
+        data.end = memory.readLong(data.mapData + Address.DtJs2);
+        data.objNum = (data.end - data.start) / 24;
+        for (data.objTmp = 1; data.objTmp < data.objNum; data.objTmp++) {
+            data.objPtr = mapData.getTraversalPtr(data.start, data.objTmp, 2);
+            if (data.objPtr > 0) {
+                data.objTypeA = memory.readInt(data.objPtr + Address.LxPyAddr);
+                if (data.objTypeA == 529 || data.objTypeA == 545 || data.objTypeA == 273 || data.objTypeA == 61440 || data.objTypeA == 1057) {
+                    data.objCamp = memory.readInt(data.objPtr + Address.ZyPyAddr);
+                    data.objCode = memory.readInt(data.objPtr + Address.DmPyAddr);
+                    data.objBlood = memory.readLong(data.objPtr + Address.GwXlAddr);
+                    if (data.objCamp > 0 && data.objPtr != data.rwAddr) {
+                        CoordinateType monster = mapData.readCoordinate(data.objPtr);
+                        data.objNameA = Strings.unicodeToAscii(memory.readByte(memory.readLong(data.objPtr + Address.McPyAddr), 200));
+                        logger.debug("对象名称:[{}],类型:[{}],阵营:[{}],代码:[{}],血量:[{}],X:[{}],Y:[{}]", data.objNameA, data.objTypeA, data.objCamp, data.objCode, data.objBlood, monster.x, monster.y);
+
+                        if (data.objBlood > 0) {
+                            gamecall.driftCall(data.rwAddr, monster.x, monster.y, 0, 0);
+                            // 跟随打怪
+                            if (followModel == 2) {
+                                int[] vkCode = new int[]{Win32VK.VK_A.code, Win32VK.VK_S.code, Win32VK.VK_D.code, Win32VK.VK_F.code, Win32VK.VK_G.code, Win32VK.VK_H.code, Win32VK.VK_Q.code, Win32VK.VK_W.code, Win32VK.VK_E.code, Win32VK.VK_R.code, Win32VK.VK_T.code, Win32VK.VK_Y.code, Win32VK.VK_X.code,};
+                                Button.DriveButton(Win32VK.VK_X.code, 1, false);
+                                Timer.sleep(800);
+                                Button.DriveButton(Win32VK.VK_X.code, 2, false);
+                                Timer.sleep(100);
+                                int vkCodeRandomIndex = NumberUtils.getRandomNumber(0, vkCode.length - 1);
+                                Button.DriveButton(vkCode[vkCodeRandomIndex], 0, false);
+                            }
+                            // 技能call
+                            if (followModel == 3) {
+                                Button.DriveButton(Win32VK.VK_X.code, 1, false);
+                                Timer.sleep(300);
+                                Button.DriveButton(Win32VK.VK_X.code, 2, false);
+                                gamecall.skillCall(data.rwAddr, code, harm, monster.x, monster.y, 0, size);
+                            }
+                        }
+                    }
+                    Timer.sleep(300);
+                }
+            }
+        }
     }
 }

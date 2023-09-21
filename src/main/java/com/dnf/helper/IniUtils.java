@@ -7,29 +7,18 @@ import org.ini4j.Ini;
 import java.io.File;
 
 @Slf4j
-public class IniConfig {
-    private static volatile IniConfig instance;
+public class IniUtils {
     private final Ini ini;
     private String filename;
 
-    private IniConfig() {
+    public IniUtils() {
         ini = new Ini();
         Config iniConfig = ini.getConfig();
         iniConfig.setEscape(false);
     }
 
-    public static IniConfig getInstance() {
-        if (instance == null) {
-            synchronized (IniConfig.class) {
-                if (instance == null) {
-                    instance = new IniConfig();
-                }
-            }
-        }
-        return instance;
-    }
 
-    public IniConfig setFilename(String filename) {
+    public IniUtils setFilename(String filename) {
         this.filename = filename;
         return this;
     }
@@ -37,12 +26,6 @@ public class IniConfig {
     public void write(String sectionName, String optionName, Object value) {
         try {
             File file = new File(filename);
-            if (!file.exists()) {
-                boolean createRes = file.createNewFile();
-                if (!createRes) {
-                    throw new Exception("创建文件失败");
-                }
-            }
             Ini.Section section = ini.get(sectionName);
             if (section == null) {
                 section = ini.add(sectionName);

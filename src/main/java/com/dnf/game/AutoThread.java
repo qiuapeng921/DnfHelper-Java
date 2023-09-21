@@ -2,8 +2,11 @@ package com.dnf.game;
 
 import com.dnf.entity.GlobalData;
 import com.dnf.entity.MapDataType;
+import com.dnf.helper.Button;
+import com.dnf.helper.IniUtils;
 import com.dnf.helper.Strings;
 import com.dnf.helper.Timer;
+import com.sun.jna.platform.win32.Win32VK;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +16,7 @@ import java.util.Random;
 public class AutoThread extends Base {
     static boolean firstEnterMap; // 首次进图
 
-    static int completedNum;
+    static int completedNum;      // 完成次数
 
     @Resource
     private MapData mapData;
@@ -29,6 +32,9 @@ public class AutoThread extends Base {
 
     @Resource
     private SendPack sendPack;
+
+    @Resource
+    private IniUtils iniUtils;
 
     @Resource
     private Task task;
@@ -47,8 +53,14 @@ public class AutoThread extends Base {
 
     private void autoThread() {
         while (GlobalData.autoSwitch) {
-
             Timer.sleep(200);
+            // 对话处理
+            if (mapData.isDialogA() || mapData.isDialogB()) {
+                Button.DriveButton(Win32VK.VK_ESCAPE.code, 0, false);
+                Timer.sleep(100);
+                Button.DriveButton(Win32VK.VK_SPACE.code, 0, false);
+                continue;
+            }
 
             // 进入城镇
             if (mapData.getStat() == 0) {
@@ -81,7 +93,11 @@ public class AutoThread extends Base {
                     firstEnterMap = true;
                 }
 
-                // 跟随怪物 todo
+                // 跟随怪物
+                if (iniUtils.read("自动配置", "跟随打怪", Integer.class) > 0) {
+                    logger.debug("开始跟随怪物");
+                    traverse.FollowMonster();
+                }
 
                 // 过图
                 if (mapData.isOpenDoor() && !mapData.isBossRoom()) {
@@ -109,9 +125,10 @@ public class AutoThread extends Base {
      * 进入城镇
      */
     private void enterTown() {
+        Integer roleNumber = iniUtils.read("自动配置", "角色数量", Integer.class);
         GlobalData.roleCount++;
-        // 取ini角色数量 todo
-        if (GlobalData.roleCount > 10) {
+        // 取ini角色数量
+        if (GlobalData.roleCount > roleNumber) {
             logger.info("指定角色完成所有角色");
             logger.info("自动刷图 - [ x ]");
             GlobalData.autoSwitch = false;
@@ -147,27 +164,32 @@ public class AutoThread extends Base {
         // 分解装备
         traverse.handleEquip();
 
-        //  1 剧情 2 搬砖  todo
-        int autoModel = 1;
+        //  1 剧情 2 搬砖
+        Integer autoModel = iniUtils.read("自动配置", "自动模式", Integer.class);
         if (autoModel == 1 && mapData.getRoleLevel() < 110) {
-            GlobalData.mapId = 105;// task.handleTask();
+            GlobalData.mapId = task.handleTask();
             GlobalData.mapLevel = 0;
         }
-
         if (autoModel == 2 && mapData.getRoleLevel() == 110) {
-            int[] mapIds = new int[0];
-            int personFame = mapData.getFame();
-            String numbers = "100002964,100002965,100002950,100002952,100002962,100002705,100002676,400001565";
-            int[] intArray = Strings.splitToIntArray(numbers, ",");
-            if (personFame < 25837) {
-//                mapIds = cfg.Key("普通地图").Int64s(",")
+            int[] mapIds;
+            if (mapData.getFame() < 25837) {
+                String numbers = iniUtils.read("自动配置", "普通地图", String.class);
+                mapIds = Strings.splitToIntArray(numbers, ",");
             } else {
-//                mapIds = cfg.Key("英豪地图").Int64s(",")
+                String numbers = iniUtils.read("自动配置", "英豪地图", String.class);
+                mapIds = Strings.splitToIntArray(numbers, ",");
             }
+
+            Integer mapLevel = iniUtils.read("自动配置", "地图难度", Integer.class);
             Random random = new Random();
             int index = random.nextInt(mapIds.length);
             GlobalData.mapId = mapIds[index];
-            GlobalData.mapLevel = 5;
+            GlobalData.mapLevel = mapLevel;
+        }
+
+        if (autoModel == 3) {
+            logger.info("未央功能未实现");
+            return;
         }
 
         if (GlobalData.mapId == 0) {
@@ -247,6 +269,11 @@ public class AutoThread extends Base {
             return;
         }
 
+        int overTheMap = iniUtils.read("自动配置", "过图方式", Integer.class);
+        if (overTheMap <= 0) {
+            return;
+        }
+
         MapDataType mapDataType = gameMap.mapData();
         int direction = gameMap.getDirection(mapDataType.mapRoute.get(0), mapDataType.mapRoute.get(1));
         if (direction < 0) {
@@ -254,15 +281,22 @@ public class AutoThread extends Base {
             return;
         }
 
-        gamecall.overMapCall(direction);
+        switch (overTheMap) {
+            case 1:
+                gamecall.overMapCall(direction);
+            case 2:
+//                gamecall.driftCall(direction);
+        }
     }
 
     /**
      * 通过boss
      */
     private void passBoss() {
-        completedNum++;
-        logger.info("{} [ {} ] 剩余疲劳 [ {} ]", mapData.getMapName(), completedNum, mapData.getPl());
+        IniUtils iniUtils = new IniUtils().setFilename("C:\\config.ini");
+        Integer count = iniUtils.read("default", "count", Integer.class);
+        iniUtils.write("default", "count", count + 1);
+        logger.info("{} [ {} ] 剩余疲劳 [ {} ]", mapData.getMapName(), count + 1, mapData.getPl());
     }
 
     /**
