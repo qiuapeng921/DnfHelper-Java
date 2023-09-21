@@ -31,6 +31,9 @@ public class Traverse extends Base {
             return;
         }
 
+        String itemStr = iniUtils.read("自动配置", "过滤物品", String.class);
+        String[] itemArr = itemStr.split(",");
+
         // 地图遍历数据
         MapTraversalType data = new MapTraversalType();
         data.rwAddr = gamecall.personPtr();
@@ -46,6 +49,10 @@ public class Traverse extends Base {
             if ((data.objTypeA == 289 || data.objTypeB == 289) && data.objCamp == 200) {
                 int[] goodsNameByte = memory.readByte(memory.readLong(memory.readLong(data.objPtr + Address.DmWpAddr) + Address.WpMcAddr), 100);
                 data.objNameB = Strings.unicodeToAscii(goodsNameByte);
+
+                if (Arrays.asList(itemArr).contains(data.objNameB)) {
+                    continue;
+                }
 
                 if (data.objPtr != data.rwAddr) {
                     int resAddress = mapData.decode(data.objPtr + Address.FbSqAddr);

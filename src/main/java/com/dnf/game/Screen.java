@@ -2,6 +2,7 @@ package com.dnf.game;
 
 import com.dnf.entity.CoordinateType;
 import com.dnf.entity.GlobalData;
+import com.dnf.helper.IniUtils;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,9 @@ public class Screen extends Base {
 
     @Resource
     private MapData mapData;
+
+    @Resource
+    private IniUtils iniUtils;
 
 
     public void screenSwitch() {
@@ -43,6 +47,12 @@ public class Screen extends Base {
         long end = memory.readLong(map + Address.DtJs2);
         long objNum = (end - start) / 24;
 
+
+        Integer screenCode = iniUtils.read("自动配置", "技能代码", Integer.class);
+        Integer screenHarm = iniUtils.read("自动配置", "技能伤害", Integer.class);
+        Integer screenSize = iniUtils.read("自动配置", "技能伤害", Integer.class);
+        Integer screenNumber = iniUtils.read("自动配置", "技能个数", Integer.class);
+
         int num = 0;
 
         for (long i = 1; i <= objNum; i++) {
@@ -55,10 +65,9 @@ public class Screen extends Base {
                 long obj_blood = memory.readLong(objPtr + Address.GwXlAddr);
                 if (objCamp > 0 && obj_code > 0 && obj_blood > 0 && objPtr != personPtr) {
                     CoordinateType monster = mapData.readCoordinate(objPtr);
-                    gameCall.skillCall(personPtr, 70231, 999999, monster.x, monster.y, 0, 1.0F);
+                    gameCall.skillCall(personPtr, screenCode, screenHarm, monster.x, monster.y, 0, screenSize);
                     num++;
-                    int number = 10;
-                    if (num >= number) break;
+                    if (num >= screenNumber) break;
                 }
             }
         }
