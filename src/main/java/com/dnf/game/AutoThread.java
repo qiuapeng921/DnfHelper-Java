@@ -197,8 +197,6 @@ public class AutoThread extends Base {
             return;
         }
 
-        logger.debug("mapId: {}", GlobalData.mapId);
-
         Timer.sleep(500);
         gamecall.areaCall(GlobalData.mapId);
         Timer.sleep(500);
