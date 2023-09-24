@@ -126,7 +126,6 @@ public class AutoThread extends Base {
      */
     private void enterTown() {
         Integer roleNumber = iniUtils.read("自动配置", "角色数量", Integer.class);
-        GlobalData.roleCount++;
         // 取ini角色数量
         if (GlobalData.roleCount > roleNumber) {
             logger.info("指定角色完成所有角色");
@@ -134,12 +133,13 @@ public class AutoThread extends Base {
             GlobalData.autoSwitch = false;
             return;
         }
+        GlobalData.roleCount++;
 
         Timer.sleep(200);
-        sendPack.selectRole(GlobalData.roleCount);
+        sendPack.selectRole(GlobalData.roleCount - 1);
         Timer.sleep(500);
         logger.info("进入角色 {} ", GlobalData.roleCount);
-        logger.info("开始第 [ {} ] 个角色,剩余疲劳 [ {} ]", GlobalData.roleCount + 1, mapData.getPl());
+        logger.info("开始第 [ {} ] 个角色,剩余疲劳 [ {} ]", GlobalData.roleCount, mapData.getPl());
 
         while (GlobalData.autoSwitch) {
             logger.debug("城镇循环");
@@ -171,15 +171,8 @@ public class AutoThread extends Base {
             GlobalData.mapLevel = 0;
         }
         if (autoModel == 2 && mapData.getRoleLevel() == 110) {
-            int[] mapIds;
-            if (mapData.getFame() < 25837) {
-                String numbers = iniUtils.read("自动配置", "普通地图", String.class);
-                mapIds = Strings.splitToIntArray(numbers, ",");
-            } else {
-                String numbers = iniUtils.read("自动配置", "英豪地图", String.class);
-                mapIds = Strings.splitToIntArray(numbers, ",");
-            }
-
+            String numbers = iniUtils.read("自动配置", "普通地图", String.class);
+            int[] mapIds = Strings.splitToIntArray(numbers, ",");
             Integer mapLevel = iniUtils.read("自动配置", "地图难度", Integer.class);
             Random random = new Random();
             int index = random.nextInt(mapIds.length);
@@ -277,7 +270,7 @@ public class AutoThread extends Base {
         MapDataType mapDataType = gameMap.mapData();
         int direction = gameMap.getDirection(mapDataType.mapRoute.get(0), mapDataType.mapRoute.get(1));
         if (direction < 0) {
-            logger.error("方向错误");
+            logger.info("方向错误");
             return;
         }
 
@@ -285,7 +278,7 @@ public class AutoThread extends Base {
             case 1:
                 gamecall.overMapCall(direction);
             case 2:
-//                gamecall.driftCall(direction);
+                gamecall.driftHandle(direction);
         }
     }
 
