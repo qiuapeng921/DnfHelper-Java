@@ -1,5 +1,6 @@
 package com.dnf.game;
 
+import com.dnf.entity.GlobalData;
 import com.dnf.helper.Strings;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
@@ -11,12 +12,15 @@ import java.util.List;
 
 @Component
 public class Task extends Base {
-    // 无任务刷新角色
-    private static boolean refreshTask;
+    public static String taskName;
+    public static String taskCondition;
+    public static int taskId;
     @Resource
     private MapData mapData;
     @Resource
     private GameCall gameCall;
+    @Resource
+    private SendPack sendPack;
 
     /**
      * 处理任务
@@ -26,17 +30,17 @@ public class Task extends Base {
     public int handleTask() {
         int mapId;
         int nextTaskId = 0;
+        // 无任务刷新角色
+        boolean refreshTask = false;
+        taskName = "";
+        taskCondition = "";
+        taskId = 0;
 
         submitTask();
 
         while (true) {
             Timer.sleep(200);
-            // 任务对象
-            taskInfo task = mainLineTask();
-            String taskName = task.taskName;
-            String taskCondition = task.taskCondition;
-            int taskId = task.taskId;
-
+            mainLineTask();
 
             // 处理相同任务输出
             if (taskId != nextTaskId) {
@@ -49,11 +53,11 @@ public class Task extends Base {
                 if (!refreshTask) {
                     Timer.sleep(200);
                     logger.info("暂无任务或卡任务,重新选择角色");
-                    // todo 返回角色
-
+                    //返回角色
+                    sendPack.returnRole();
                     Timer.sleep(2000);
-                    // todo 选择角色
-
+                    // 选择角色
+                    sendPack.selectRole(GlobalData.roleCount - 1);
                     Timer.sleep(500);
                     refreshTask = true;
                     continue;
@@ -110,13 +114,11 @@ public class Task extends Base {
     /**
      * 主线任务
      */
-    public taskInfo mainLineTask() {
+    public void mainLineTask() {
         long taskAddress = memory.readLong(Address.TaskAddr);
         long start = memory.readLong(taskAddress + Address.QbRwStartAddr);
         long end = memory.readLong(taskAddress + Address.QbRwEndAddr);
         long num = (end - start) / 8;
-
-        taskInfo taskInfo = new taskInfo();
 
         for (long i = 0; i < num; i++) {
             long taskPtr = memory.readLong(start + i * 8);
@@ -124,18 +126,17 @@ public class Task extends Base {
             if (taskType == 0) {
                 int taskLength = memory.readInt(taskPtr + Address.RwDxAddr);
                 if (taskLength > 7) {
-                    taskInfo.taskName = Strings.unicodeToAscii(memory.readByte(memory.readLong(taskPtr + 16), 100));
+                    taskName = Strings.unicodeToAscii(memory.readByte(memory.readLong(taskPtr + 16), 100));
                 } else {
-                    taskInfo.taskName = Strings.unicodeToAscii(memory.readByte(taskPtr + 16, 100));
+                    taskName = Strings.unicodeToAscii(memory.readByte(taskPtr + 16, 100));
                 }
                 // 任务条件
-                taskInfo.taskCondition = Strings.unicodeToAscii(memory.readByte(memory.readLong(taskPtr + Address.RwTjAddr), 100));
+                taskCondition = Strings.unicodeToAscii(memory.readByte(memory.readLong(taskPtr + Address.RwTjAddr), 100));
                 // 任务编号
-                taskInfo.taskId = memory.readInt(taskPtr);
+                taskId = memory.readInt(taskPtr);
                 break;
             }
         }
-        return taskInfo;
     }
 
     /**
@@ -495,11 +496,4 @@ public class Task extends Base {
         }
         return 0;
     }
-}
-
-
-class taskInfo {
-    public String taskName;
-    public String taskCondition;
-    public int taskId;
 }
