@@ -331,7 +331,7 @@ public class GameCall extends Base {
     /**
      * 接受call
      *
-     * @param code
+     * @param taskId int
      */
     public void acceptTaskCall(int taskId) {
         int[] data = subRsp(64);
@@ -361,7 +361,7 @@ public class GameCall extends Base {
     /**
      * 完成任务Call
      *
-     * @param taskId
+     * @param taskId long
      */
     public void finishTaskCall(long taskId) {
         int[] data = subRsp(512);

@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -23,7 +24,7 @@ public class Task extends Base {
      * @return long
      */
     public int handleTask() {
-        long mapId;
+        int mapId;
         int nextTaskId = 0;
 
         submitTask();
@@ -67,7 +68,7 @@ public class Task extends Base {
 
             // 任务未接，执行接取任务
             if (finishStatus(taskId) == -1) {
-                // AcceptTheTaskCall(taskId)
+                gameCall.acceptTaskCall(taskId);
             }
 
             // 跳过部分无法完成任务，取最高等级执行
@@ -102,7 +103,7 @@ public class Task extends Base {
             }
         }
 
-        return (int) mapId;
+        return mapId;
     }
 
 
@@ -171,57 +172,49 @@ public class Task extends Base {
         long start = memory.readLong(taskAddress + Address.YjRwStartAddr);
         long end = memory.readLong(taskAddress + Address.YjRwEndAddr);
         long num = (end - start) / 16;
+        long loopEnd = start + num * 16L;
 
-        long[] tmpArr = new long[3];
-        for (long i = 0; i < num; i++) {
-            try {
-                long taskPtr = memory.readLong(start + i * 16);
-                if (memory.readInt(taskPtr) == taskId) {
-                    long frequency = mapData.decode(start + i * 16L + 8);
-                    if (frequency < 512) {
-                        return frequency;
-                    } else if (frequency == 512) {
-                        return 1L;
-                    }
-                    tmpArr[0] = (frequency % 512);
-                    long theRest = (frequency) - tmpArr[0];
-                    if (theRest < 262144) {
-                        tmpArr[1] = (theRest / 512);
-                        tmpArr[1] = (theRest % 262144 / 512);
-                    }
-                    theRest = (theRest - tmpArr[0] * 512);
-                    if (theRest < 262144) {
-                        tmpArr[2] = 0;
-                        tmpArr[2] = (theRest % 262144);
-                    }
-                    // # 数组排序 从大到小
-                    long sum2;
-                    for (int a = 0; a < tmpArr.length; a++) {
-                        for (int b = a + 1; b < tmpArr.length; b++) {
-                            if (tmpArr[a] < tmpArr[b]) {
-                                sum2 = tmpArr[a];
-                                tmpArr[a] = tmpArr[b];
-                                tmpArr[b] = sum2;
-                            }
-                        }
-                    }
-                    if (tmpArr[0] == 0) {
-                        tmpArr[0] = 1;
-                        return tmpArr[0];
-                    }
+        for (long i = start; i < loopEnd; i += 16L) {
+            long taskPtr = memory.readLong(i);
+            if (memory.readInt(taskPtr) == taskId) {
+                long frequency = mapData.decode(i + 8);
+                if (frequency < 512L) {
+                    return frequency;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
+                long[] tmpArr = calculateFrequencyParts(frequency);
+                Arrays.sort(tmpArr);
+                long sortedMaxPart = tmpArr[tmpArr.length - 1];
+                if (sortedMaxPart == 0) {
+                    return 1L;
+                } else {
+                    return sortedMaxPart;
+                }
             }
         }
-        return -1;
+
+        return -1L;
     }
+
+    private long[] calculateFrequencyParts(long frequency) {
+        long[] parts = new long[3];
+        parts[0] = frequency % 512L;
+        long theRest = frequency - parts[0];
+
+        if (theRest < 262144L) {
+            parts[1] = theRest / 512L;
+            parts[2] = theRest % 262144L / 512L;
+        } else {
+            parts[1] = theRest / 262144L;
+        }
+
+        return parts;
+    }
+
 
     /**
      * 任务地图
      */
-    public long taskMap(long taskId) {
+    public int taskMap(long taskId) {
         long taskAddr = memory.readLong(Address.TaskAddr);
         long start = memory.readLong(taskAddr + Address.YjRwStartAddr);
         long end = memory.readLong(taskAddr + Address.YjRwEndAddr);
