@@ -28,7 +28,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn clear compile package
+        run: mvn clean compile package
 
       - name: Upload Release
         uses: softprops/action-gh-release@v1
