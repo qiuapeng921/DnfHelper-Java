@@ -37,4 +37,3 @@ jobs:
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: |
             target/*.jar
-            src/main/resources/helper.ini
