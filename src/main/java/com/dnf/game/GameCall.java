@@ -326,4 +326,51 @@ public class GameCall extends Base {
         Timer.sleep(100);
         driftCall(address, startX + endX / 2, StartY, 0, 50);
     }
+
+
+    /**
+     * 接受call
+     *
+     * @param code
+     */
+    public void acceptTaskCall(int taskId) {
+        int[] data = subRsp(64);
+        data = Bytes.addBytes(data, new int[]{186}, Bytes.intToBytes(taskId));
+        data = Bytes.addBytes(data, call(Address.JsCallAddr));
+        data = Bytes.addBytes(data, addRsp(64));
+        compileCall(data);
+    }
+
+    /**
+     * 提交Call
+     */
+    public void submitTaskCall(int taskId) {
+        int[] data = subRsp(48);
+        data = Bytes.addBytes(data, new int[]{65, 189, 1, 0, 0, 0});
+        data = Bytes.addBytes(data, new int[]{65, 190, 255, 255, 255, 255});
+        data = Bytes.addBytes(data, new int[]{65, 139, 205});
+        data = Bytes.addBytes(data, new int[]{69, 139, 198});
+        data = Bytes.addBytes(data, new int[]{72, 185}, Bytes.intToBytes(Address.TaskAddr));
+        data = Bytes.addBytes(data, new int[]{72, 139, 9});
+        data = Bytes.addBytes(data, new int[]{186}, Bytes.intToBytes(taskId));
+        data = Bytes.addBytes(data, call(Address.TjCallAddr));
+        data = Bytes.addBytes(data, addRsp(48));
+        compileCall(data);
+    }
+
+    /**
+     * 完成任务Call
+     *
+     * @param taskId
+     */
+    public void finishTaskCall(long taskId) {
+        int[] data = subRsp(512);
+        data = Bytes.addBytes(data, new int[]{179, 255});
+        data = Bytes.addBytes(data, new int[]{68, 15, 182, 203});
+        data = Bytes.addBytes(data, new int[]{65, 176, 255});
+        data = Bytes.addBytes(data, new int[]{186}, Bytes.intToBytes(taskId));
+        data = Bytes.addBytes(data, call(Address.WcCallAddr));
+        data = Bytes.addBytes(data, addRsp(512));
+        compileCall(data);
+    }
 }
