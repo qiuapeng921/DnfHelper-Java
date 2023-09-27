@@ -156,11 +156,11 @@ public class MapData extends Base {
     }
 
     public boolean isDialogB() {
-        return true;
+        return memory.readInt(Address.DHAddrB) == 1;
     }
 
     public boolean isDialogEsc() {
-        return true;
+        return memory.readInt(Address.EscDHAddr) == 1;
     }
 
     /**

@@ -65,7 +65,7 @@ public class Address {
     public static final long CdResetCallAddr = 0x144504200L; // CD重置CALL
     public static final long FjCallAddr = 0x144309180L; // 分解CALL
     public static final long ZlCallAddr = 0x1442FF460L; // 整理CALL
-    public static final long DqFzAddr = 0x14B527438L; // 当前负重
+    public static final long DqFzAddr = 0x58L; // 当前负重
     public static final long ZdFzAddr = 0x2AC0L; // 最大负重
     public static final long FbAddr = 0x14B52B950L; // 发包基址
     public static final long HcCallAddr = 0x145579F00L; // 缓冲CALL
