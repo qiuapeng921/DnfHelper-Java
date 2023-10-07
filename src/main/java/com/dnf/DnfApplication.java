@@ -1,8 +1,6 @@
 package com.dnf;
 
 import com.dnf.game.Initialize;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +14,11 @@ public class DnfApplication {
         application.setBannerMode(Banner.Mode.OFF);
 
         ConfigurableApplicationContext applicationContext = application.run(args);
+
+        // 注册关闭钩子
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("服务关闭");
+        }));
 
         // 从容器获取实例对象
         Initialize initialize = applicationContext.getBean(Initialize.class);
