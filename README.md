@@ -7,7 +7,7 @@
 
 ## Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/qiuapeng921/DnfHelper-Java.svg)](https://starchart.cc/qiuapeng921/DnfHelper-Java)
+[![Stargazers over time](https://starchart.cc/qiuapeng921/DnfHelper-Java.svg)](https://starchart.cc/SunnyEmbrace/DnfHelper-Java)
 
 
 ## 免责声明
