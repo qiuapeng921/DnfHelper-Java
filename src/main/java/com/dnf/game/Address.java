@@ -90,7 +90,7 @@ public class Address {
     public static final long DzIDAddr = 0x3FCCL; // 动作ID
     public static final long DtKs2 = 0x198L; // 地图开始2
     public static final long DtJs2 = 0x1A0L; // 地图结束2
-    public static final long DtPyAddr = 0x160L; // 地图偏移
+    public static final long DtPyAddr = 0x158L; // 地图偏移
     public static final long LxPyAddr = 0x12CL; // 类型偏移
     public static final long FxPyAddr = 0x140L; // 方向偏移
     public static final long CEPfAddr = 0x88L; // 评分偏移
