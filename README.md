@@ -1,9 +1,3 @@
-### 交流群: star后带上你的github账号加群
-
-#### 企鹅群
-
-<img src="src/main/resources/qq.png" alt="alt text" width="276" height="319"> 
-
 
 ## Stargazers over time
 
