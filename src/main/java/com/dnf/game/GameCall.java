@@ -235,7 +235,7 @@ public class GameCall extends Base {
     // DriftCall 漂移Call
     public void driftCall(long ptr, int x, int y, int z, int speed) {
         int[] shellCode = new int[]{72, 129, 236, 0, 8, 0, 0};
-        shellCode = Bytes.addBytes(shellCode, new int[]{185, 241, 0, 0, 0});
+        shellCode = Bytes.addBytes(shellCode, new int[]{185, 249, 0, 0, 0});
         shellCode = Bytes.addBytes(shellCode, new int[]{72, 184}, Bytes.intToBytes(Address.SqNcCallAddr));
         shellCode = Bytes.addBytes(shellCode, new int[]{255, 208});
         shellCode = Bytes.addBytes(shellCode, new int[]{72, 139, 240, 72, 139, 200});
