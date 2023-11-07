@@ -53,70 +53,73 @@ public class AutoThread extends Base {
 
     private void autoThread() {
         while (GlobalData.autoSwitch) {
-            Timer.sleep(200);
-            // 对话处理
-            if (mapData.isDialogA() || mapData.isDialogB()) {
-                Button.DriveButton(Win32VK.VK_ESCAPE.code, 0, false);
-                Timer.sleep(100);
-                Button.DriveButton(Win32VK.VK_SPACE.code, 0, false);
-                continue;
-            }
-
-            // 进入城镇
-            if (mapData.getStat() == 0) {
+            try {
                 Timer.sleep(200);
-                enterTown();
-                continue;
-            }
-
-            // 城镇处理
-            if (mapData.getStat() == 1 && mapData.isTown()) {
-                townHandle();
-                continue;
-            }
-
-            // 进入副本
-            if (mapData.getStat() == 2) {
-                enterMap(GlobalData.mapId, GlobalData.mapLevel);
-                continue;
-            }
-
-            // 在地图内
-            if (mapData.getStat() == 3) {
-                if (!firstEnterMap && !mapData.isTown()) {
-                    //  透明call
-                    gamecall.hideCall(gamecall.personPtr());
-                    //  sss评分
-                    Random random = new Random();
-                    int nextInt = random.nextInt(9999999 - 5201314 + 1) + 5201314;
-                    memory.writeLong(memory.readLong(Address.PFAddr) + Address.CEPfAddr, nextInt);
-                    firstEnterMap = true;
-                }
-
-                // 跟随怪物
-                if (iniUtils.read("自动配置", "跟随打怪", Integer.class) > 0) {
-                    logger.debug("开始跟随怪物");
-                    traverse.FollowMonster();
-                }
-
-                // 过图
-                if (mapData.isOpenDoor() && !mapData.isBossRoom()) {
-                    // 捡物品
-                    traverse.packPickup();
-                    // 过图
-                    passMap();
+                // 对话处理
+                if (mapData.isDialogA() || mapData.isDialogB()) {
+                    Button.DriveButton(Win32VK.VK_ESCAPE.code, 0, false);
+                    Timer.sleep(100);
+                    Button.DriveButton(Win32VK.VK_SPACE.code, 0, false);
                     continue;
                 }
 
-                if (mapData.isBossRoom() && mapData.isPass()) {
-                    // 捡物品
-                    traverse.packPickup();
-                    // 刷图计次
-                    passBoss();
-                    // 退出副本
-                    quitMap();
-                    firstEnterMap = false;
+                // 进入城镇
+                if (mapData.getStat() == 0) {
+                    Timer.sleep(200);
+                    enterTown();
+                    continue;
                 }
+
+                // 城镇处理
+                if (mapData.getStat() == 1 && mapData.isTown()) {
+                    townHandle();
+                    continue;
+                }
+
+                // 进入副本
+                if (mapData.getStat() == 2) {
+                    enterMap(GlobalData.mapId, GlobalData.mapLevel);
+                    continue;
+                }
+
+                // 在地图内
+                if (mapData.getStat() == 3) {
+                    if (!firstEnterMap && !mapData.isTown()) {
+                        //  透明call
+                        gamecall.hideCall(gamecall.personPtr());
+                        //  sss评分
+                        Random random = new Random();
+                        int nextInt = random.nextInt(9999999 - 5201314 + 1) + 5201314;
+                        memory.writeLong(memory.readLong(Address.PFAddr) + Address.CEPfAddr, nextInt);
+                        firstEnterMap = true;
+                    }
+
+                    // 跟随怪物
+                    if (iniUtils.read("自动配置", "跟随打怪", Integer.class) > 0) {
+                        logger.debug("开始跟随怪物");
+                        traverse.FollowMonster();
+                    }
+
+                    // 过图
+                    if (mapData.isOpenDoor() && !mapData.isBossRoom()) {
+                        // 捡物品
+                        traverse.packPickup();
+                        // 过图
+                        passMap();
+                        continue;
+                    }
+
+                    if (mapData.isBossRoom() && mapData.isPass()) {
+                        // 捡物品
+                        traverse.packPickup();
+                        // 刷图计次
+                        passBoss();
+                        // 退出副本
+                        quitMap();
+                        firstEnterMap = false;
+                    }
+                }
+            } catch (Exception ignore) {
             }
         }
     }
