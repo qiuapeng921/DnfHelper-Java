@@ -295,28 +295,24 @@ public class GameCall extends Base {
 
         long coordinateStructure = roomData + fx * Address.FxIdAddr + Address.ZbStPyAddr;
         int startX = memory.readInt(coordinateStructure);
-        int StartY = memory.readInt(coordinateStructure + 4);
+        int startY = memory.readInt(coordinateStructure + 4);
         int endX = memory.readInt(coordinateStructure + 8);
         int endY = memory.readInt(coordinateStructure + 12);
-        int x = 0, y = 0;
+        int x = 0;
+        int y = 0;
 
-        switch (fx) {
-            case 0:
-                x = startX + endX + 20;
-                y = StartY + endY / 2;
-                break;
-            case 1:
-                x = startX - 20;
-                y = StartY + endY / 2;
-                break;
-            case 2:
-                x = startX + endX / 2;
-                y = StartY + endY + 20;
-                break;
-            case 3:
-                x = startX + endX / 2;
-                y = StartY - 20;
-                break;
+        if (fx == 0) {
+            x = startX + endX + 20;
+            y = startY + endY / 2;
+        } else if (fx == 1) {
+            x = startX - 20;
+            y = startY + endY / 2;
+        } else if (fx == 2) {
+            x = startX + endX / 2;
+            y = startY + endY + 20;
+        } else if (fx == 3) {
+            x = startX + endX / 2;
+            y = startY - 20;
         }
         if (x == 0 || y == 0) {
             logger.info("漂移顺图异常");
@@ -324,7 +320,7 @@ public class GameCall extends Base {
         }
         driftCall(address, x, y, 0, 50);
         Timer.sleep(100);
-        driftCall(address, startX + endX / 2, StartY, 0, 50);
+        driftCall(address, startX + endX / 2, startY, 0, 50);
     }
 
 

@@ -19,11 +19,7 @@ public class Initialize extends Base {
     @Resource
     private Screen screen;
 
-    @Resource
-    private IniUtils iniUtils;
-
-
-    public void Init() {
+    public void init() {
         String modelName = "dnf.exe";
         int processId = Process.getProcessId(modelName);
         if (processId == 0) {

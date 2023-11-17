@@ -24,6 +24,6 @@ public class DnfApplication {
 
         // 从容器获取实例对象
         Initialize initialize = applicationContext.getBean(Initialize.class);
-        initialize.Init();
+        initialize.init();
     }
 }
