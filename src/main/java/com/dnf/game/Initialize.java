@@ -97,7 +97,6 @@ public class Initialize extends Base {
 
         FileUtils file = new FileUtils(IniConstant.Helper);
         if (!file.exists()) {
-            return;
         }
     }
 }
