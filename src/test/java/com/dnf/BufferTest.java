@@ -1,5 +1,7 @@
 package com.dnf;
 
+import com.dnf.driver.ltq.ReadWrite;
+import com.sun.jna.Memory;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -46,6 +48,22 @@ public class BufferTest {
         }
 
         return result;
+    }
+
+    @Test
+    public void test() {
+        // 创建一个指定大小的空字节集
+        Memory buffer = new Memory(1);
+
+        // 准备输入缓冲区
+        ReadWrite inputData = new ReadWrite();
+        inputData.setProcessId(1);
+        inputData.setData(buffer);
+        inputData.setMemoryAddress(0x100000L);
+        inputData.setSize(1);
+        inputData.setKey("");
+
+        System.out.println("inputData = " + inputData);
     }
 
     @Test

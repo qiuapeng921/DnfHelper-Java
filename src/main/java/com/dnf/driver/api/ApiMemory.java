@@ -1,4 +1,4 @@
-package com.dnf.driver.impl;
+package com.dnf.driver.api;
 
 import com.dnf.driver.ReadWriteMemory;
 import com.sun.jna.Memory;
@@ -153,7 +153,7 @@ public class ApiMemory implements ReadWriteMemory {
             }
             return true;
         } catch (Exception e) {
-            logger.error("writeByteMemory address = {} , error = {}", address, e.getMessage());
+            logger.error("writeByteMemory address = {} , error = {}", address, e.getStackTrace());
             return false;
         } finally {
             kernel32.CloseHandle(handle);

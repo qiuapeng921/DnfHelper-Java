@@ -2,7 +2,7 @@ package com.dnf.config;
 
 import com.dnf.constant.IniConstant;
 import com.dnf.driver.ReadWriteMemory;
-import com.dnf.driver.impl.ApiMemory;
+import com.dnf.driver.api.ApiMemory;
 import com.dnf.helper.IniUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
