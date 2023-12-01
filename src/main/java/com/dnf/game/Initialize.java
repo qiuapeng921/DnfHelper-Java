@@ -34,6 +34,12 @@ public class Initialize extends Base {
 
         // 设置全局进程id
         memory.setProcessId(processId);
+        // 判断是否有图标
+        if (memory.readInt(0x140000000L) != 9460301) {
+            logger.error("无读写权限");
+            return;
+        }
+
         initEmptyAddress();
 
         logger.info("加载成功-欢迎使用");
