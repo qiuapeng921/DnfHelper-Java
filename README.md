@@ -1,3 +1,15 @@
+## 如何启动
+
+```markdown
+1. 下载并安装jdk11
+   https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_windows-x64_bin.zip)
+2. 下载maven https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.zip
+3. 配置好jdk环境变量和maven环境变量
+4. git clone https://mirror.ghproxy.com/https://github.com/SunnyEmbrace/DnfHelper-Java.git
+5. maven package
+4. 自己找破图标驱动或者进qq群下载破图标驱动,启动图标驱动
+5. 复制src/main/resources/helper.ini 到target目录下
+6. *** 管理员方式运行 java -jar Dnfhelper-Java-1.0.0.jar ***
 
 ## Stargazers over time
 
