@@ -9,7 +9,7 @@
 5. maven package
 4. 自己找破图标驱动或者进qq群下载破图标驱动,启动图标驱动
 5. 复制src/main/resources/helper.ini 到target目录下
-6. *** 管理员方式运行 java -jar Dnfhelper-Java-1.0.0.jar ***
+6. *** 管理员方式运行 java -jar target/Dnfhelper-Java-1.0.0.jar ***
 ```
 
 ## Stargazers over time
