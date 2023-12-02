@@ -304,17 +304,21 @@ public class AutoThread extends Base {
         int num = random.nextInt(4);
         sendPack.getIncome(0, num);
 
+        int outMap = iniUtils.read("自动配置", "出图方式", Integer.class);
+
         while (GlobalData.autoSwitch) {
             logger.debug("退出副本-处理");
             Timer.sleep(200);
             // 捡物品
             traverse.packPickup();
-
+            if (outMap == 0) {
+                Timer.sleep(3000);
+            }
             // 退出地图
             sendPack.leaveMap();
 
             // 在城镇或者选图跳出循环
-            if (mapData.getStat() == 1 || mapData.getStat() == 2 || mapData.isTown()) {
+            if (mapData.getStat() == 1) {
                 break;
             }
         }
