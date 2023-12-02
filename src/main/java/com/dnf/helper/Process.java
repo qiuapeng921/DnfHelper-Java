@@ -5,6 +5,8 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.*;
 
 public class Process {
+    static Kernel32 kernel32 = Kernel32.INSTANCE;
+    static User32 user32 = User32.INSTANCE;
 
     /**
      * 获取指定进程名的进程id
@@ -13,8 +15,6 @@ public class Process {
      * @return int
      */
     public static int getProcessId(String processName) {
-        Kernel32 kernel32 = Kernel32.INSTANCE;
-
         Tlhelp32.PROCESSENTRY32.ByReference pe = new Tlhelp32.PROCESSENTRY32.ByReference();
 
         // 创建进程快照
@@ -48,8 +48,6 @@ public class Process {
      * @return long
      */
     public static long getProcessModuleHandle(int processId, String moduleName) {
-        Kernel32 kernel32 = Kernel32.INSTANCE;
-
         long result = 0;
         WinNT.HANDLE hModuleSnap = kernel32.CreateToolhelp32Snapshot(Tlhelp32.TH32CS_SNAPMODULE, new WinBase.DWORD(processId));
         Tlhelp32.MODULEENTRY32W me = new Tlhelp32.MODULEENTRY32W();
@@ -68,5 +66,16 @@ public class Process {
 
         kernel32.CloseHandle(hModuleSnap);
         return result;
+    }
+
+    /**
+     * 获取窗口句柄
+     *
+     * @param lpClassName  类名称
+     * @param lpWindowName 窗口名称
+     * @return WinDef.HWND
+     */
+    public static WinDef.HWND FindWindowW(String lpClassName, String lpWindowName) {
+        return user32.FindWindow(lpClassName, lpWindowName);
     }
 }
