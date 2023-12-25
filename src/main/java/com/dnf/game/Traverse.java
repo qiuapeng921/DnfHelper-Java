@@ -23,6 +23,17 @@ public class Traverse extends Base {
     @Resource
     private IniUtils iniUtils;
 
+    public MapTraversalType getMapData() {
+        // 地图遍历数据
+        MapTraversalType data = new MapTraversalType();
+        data.rwAddr = gamecall.personPtr();
+        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
+        data.start = memory.readLong(data.mapData + Address.DtKs2);
+        data.end = memory.readLong(data.mapData + Address.DtJs2);
+        data.objNum = (data.end - data.start) / 24;
+        return data;
+    }
+
     /**
      * 组包拾取
      */
@@ -35,12 +46,7 @@ public class Traverse extends Base {
         String[] itemArr = itemStr.split(",");
 
         // 地图遍历数据
-        MapTraversalType data = new MapTraversalType();
-        data.rwAddr = gamecall.personPtr();
-        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
-        data.start = memory.readLong(data.mapData + Address.DtKs2);
-        data.end = memory.readLong(data.mapData + Address.DtJs2);
-        data.objNum = (data.end - data.start) / 24;
+        MapTraversalType data = getMapData();
         for (data.objTmp = 1; data.objTmp < data.objNum; data.objTmp++) {
             data.objPtr = mapData.getTraversalPtr(data.start, data.objTmp, 2);
             data.objTypeA = memory.readInt(data.objPtr + Address.LxPyAddr);
@@ -106,8 +112,10 @@ public class Traverse extends Base {
         logger.info("处理装备 [ {} ] 件", num);
     }
 
-
-    public void FollowMonster() {
+    /**
+     * 跟随怪物
+     */
+    public void followMonster() {
 
         if (mapData.getStat() != 3) {
             return;
@@ -118,12 +126,7 @@ public class Traverse extends Base {
         int harm = iniUtils.read("自动配置", "技能伤害", Integer.class);
         int size = iniUtils.read("自动配置", "技能大小", Integer.class);
 
-        MapTraversalType data = new MapTraversalType();
-        data.rwAddr = gamecall.personPtr();
-        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
-        data.start = memory.readLong(data.mapData + Address.DtKs2);
-        data.end = memory.readLong(data.mapData + Address.DtJs2);
-        data.objNum = (data.end - data.start) / 24;
+        MapTraversalType data = getMapData();
         for (data.objTmp = 1; data.objTmp < data.objNum; data.objTmp++) {
             data.objPtr = mapData.getTraversalPtr(data.start, data.objTmp, 2);
             if (data.objPtr > 0) {

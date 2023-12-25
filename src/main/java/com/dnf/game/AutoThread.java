@@ -97,7 +97,7 @@ public class AutoThread extends Base {
                     // 跟随怪物
                     if (iniUtils.read("自动配置", "跟随打怪", Integer.class) > 0) {
                         logger.debug("开始跟随怪物");
-                        traverse.FollowMonster();
+                        traverse.followMonster();
                     }
 
                     // 过图

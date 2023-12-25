@@ -206,7 +206,7 @@ public class MapData extends Base {
         }
         if (t == 2) {
             long one = memory.readLong(ptr + (offset - 1) * 24L);
-            result = memory.readLong(one + 16) - 32;
+            result = memory.readLong(one + 16) - 48;
         }
 
         return result;
