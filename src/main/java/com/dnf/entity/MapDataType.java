@@ -5,7 +5,11 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-// 地图数据
+/**
+ * 地图数据
+ *
+ * @author 情歌
+ */
 @Data
 public class MapDataType {
     public String mapName; // 地图名称

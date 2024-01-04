@@ -8,11 +8,12 @@ import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author 情歌
+ */
 public class LtqMemory implements ReadWriteMemory {
+    final Logger logger = LoggerFactory.getLogger(LtqMemory.class.getName());
     private final Kernel32 kernel32;
-
-    Logger logger = LoggerFactory.getLogger(LtqMemory.class.getName());
-
     private int processId;
 
 

@@ -12,11 +12,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class AutoThread extends Base {
     static boolean firstEnterMap; // 首次进图
 
-    static int completedNum;      // 完成次数
+    // static int completedNum;      // 完成次数
 
     @Resource
     private MapData mapData;

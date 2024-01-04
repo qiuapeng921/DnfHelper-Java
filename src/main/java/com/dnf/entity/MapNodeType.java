@@ -2,7 +2,11 @@ package com.dnf.entity;
 
 import lombok.Data;
 
-// 地图节点
+/**
+ * 地图节点
+ *
+ * @author 情歌
+ */
 @Data
 public class MapNodeType {
     public int f; // 地图F点

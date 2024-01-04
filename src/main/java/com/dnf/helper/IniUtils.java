@@ -6,6 +6,9 @@ import org.ini4j.Ini;
 
 import java.io.File;
 
+/**
+ * @author 情歌
+ */
 @Slf4j
 public class IniUtils {
     private final Ini ini;

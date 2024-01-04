@@ -5,6 +5,9 @@ import com.dnf.helper.Strings;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class MapData extends Base {
     @Resource

@@ -1,5 +1,8 @@
 package com.dnf.entity;
 
+/**
+ * @author 情歌
+ */
 public class GlobalData {
     public static boolean autoSwitch;       // 自动开关
     public static boolean screenSwitch;     // 技能开关

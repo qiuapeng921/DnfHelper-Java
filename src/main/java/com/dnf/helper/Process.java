@@ -4,9 +4,12 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.*;
 
+/**
+ * @author 情歌
+ */
 public class Process {
-    static Kernel32 kernel32 = Kernel32.INSTANCE;
-    static User32 user32 = User32.INSTANCE;
+    static final Kernel32 kernel32 = Kernel32.INSTANCE;
+    static final User32 user32 = User32.INSTANCE;
 
     /**
      * 获取指定进程名的进程id

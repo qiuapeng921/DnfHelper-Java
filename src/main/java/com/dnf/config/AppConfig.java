@@ -7,6 +7,9 @@ import com.dnf.helper.IniUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author 情歌
+ */
 @Configuration
 public class AppConfig {
     /**
@@ -27,7 +30,7 @@ public class AppConfig {
     @Bean
     public IniUtils iniUtils() {
         IniUtils iniUtils = new IniUtils();
-        iniUtils.setFilename(IniConstant.Helper);
+        iniUtils.setFilename(IniConstant.HELPER);
         return iniUtils;
     }
 }

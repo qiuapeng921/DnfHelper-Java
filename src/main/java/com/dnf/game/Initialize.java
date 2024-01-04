@@ -11,6 +11,9 @@ import com.sun.jna.platform.win32.WinUser;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class Initialize extends Base {
     @Resource
@@ -94,15 +97,14 @@ public class Initialize extends Base {
 
     private void initConfigIni() {
         // 判断是否存在全局计次配置文件
-        FileUtils fileUtils = new FileUtils(IniConstant.Config);
+        FileUtils fileUtils = new FileUtils(IniConstant.CONFIG);
         if (!fileUtils.exists()) {
             fileUtils.create();
             IniUtils iniUtils = new IniUtils();
-            iniUtils.setFilename(IniConstant.Config).write("default", "count", 0);
+            iniUtils.setFilename(IniConstant.CONFIG).write("default", "count", 0);
         }
 
-        FileUtils file = new FileUtils(IniConstant.Helper);
-        if (!file.exists()) {
-        }
+        FileUtils file = new FileUtils(IniConstant.HELPER);
+        file.exists();
     }
 }

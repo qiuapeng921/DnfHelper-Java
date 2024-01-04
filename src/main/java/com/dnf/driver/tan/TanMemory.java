@@ -4,6 +4,9 @@ import com.dnf.driver.ReadWriteMemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author 情歌
+ */
 public class TanMemory implements ReadWriteMemory {
     Logger logger = LoggerFactory.getLogger(TanMemory.class.getName());
 

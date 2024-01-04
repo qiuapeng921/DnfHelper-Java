@@ -1,5 +1,8 @@
 package com.dnf.driver.ltq;
 
+/**
+ * @author 情歌
+ */
 public class IoCode {
     public static final int CHECK_CODE = 2236424;
     public static final int READ_CODE = 2236428;

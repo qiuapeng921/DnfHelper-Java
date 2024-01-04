@@ -2,7 +2,11 @@ package com.dnf.entity;
 
 import lombok.Data;
 
-// 游戏地图
+/**
+ * 游戏地图
+ *
+ * @author 情歌
+ */
 @Data
 public class GameMapType {
     public CoordinateType mapCoordinates; // 地图坐标

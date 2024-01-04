@@ -7,6 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+/**
+ * @author Administrator
+ */
 @SpringBootApplication
 @Slf4j
 public class DnfApplication {
@@ -18,9 +21,7 @@ public class DnfApplication {
         ConfigurableApplicationContext applicationContext = application.run(args);
 
         // 注册关闭钩子
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            log.info("服务关闭");
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> log.info("服务关闭")));
 
         // 从容器获取实例对象
         Initialize initialize = applicationContext.getBean(Initialize.class);

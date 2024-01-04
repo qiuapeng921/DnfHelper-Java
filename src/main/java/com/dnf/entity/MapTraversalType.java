@@ -2,6 +2,11 @@ package com.dnf.entity;
 
 import lombok.Data;
 
+/**
+ * 地图遍历
+ *
+ * @author 情歌
+ */
 @Data
 public class MapTraversalType {
     // 地图遍历类型的属性

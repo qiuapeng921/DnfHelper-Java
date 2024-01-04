@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class GameMap extends Base {
 
@@ -53,9 +56,7 @@ public class GameMap extends Base {
                 direction = 3;
             }
         } else if (y == 0) {
-            if (x == 1) {
-                direction = 0;
-            } else {
+            if (x != 1) {
                 direction = 1;
             }
         }

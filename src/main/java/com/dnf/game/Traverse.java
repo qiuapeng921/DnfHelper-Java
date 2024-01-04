@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class Traverse extends Base {
     @Resource

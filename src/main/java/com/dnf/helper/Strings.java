@@ -3,6 +3,9 @@ package com.dnf.helper;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+/**
+ * @author 情歌
+ */
 public class Strings {
 
     // 取文本左边

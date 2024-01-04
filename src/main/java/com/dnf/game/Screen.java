@@ -7,6 +7,9 @@ import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class Screen extends Base {
     @Resource
@@ -60,14 +63,16 @@ public class Screen extends Base {
             int objType = memory.readInt(objPtr + Address.LxPyAddr);
             int objCamp = memory.readInt(objPtr + Address.ZyPyAddr);
 
-            int obj_code = memory.readInt(objPtr + Address.DmPyAddr);
+            int objCode = memory.readInt(objPtr + Address.DmPyAddr);
             if (objType == 529 || objType == 545 || objType == 273 || objType == 61440) {
-                long obj_blood = memory.readLong(objPtr + Address.GwXlAddr);
-                if (objCamp > 0 && obj_code > 0 && obj_blood > 0 && objPtr != personPtr) {
+                long objBlood = memory.readLong(objPtr + Address.GwXlAddr);
+                if (objCamp > 0 && objCode > 0 && objBlood > 0 && objPtr != personPtr) {
                     CoordinateType monster = mapData.readCoordinate(objPtr);
                     gameCall.skillCall(personPtr, screenCode, screenHarm, monster.x, monster.y, 0, (float) screenSize);
                     num++;
-                    if (num >= screenNumber) break;
+                    if (num >= screenNumber) {
+                        break;
+                    }
                 }
             }
         }

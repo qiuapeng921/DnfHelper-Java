@@ -1,5 +1,8 @@
 package com.dnf.driver;
 
+/**
+ * @author 情歌
+ */
 public interface ReadWriteMemory {
     void setProcessId(int processId);
 

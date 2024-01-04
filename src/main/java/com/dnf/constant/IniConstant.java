@@ -1,8 +1,11 @@
 package com.dnf.constant;
 
+/**
+ * @author 情歌
+ */
 public class IniConstant {
 
-    public static final String Config = "C:\\config.ini";
+    public static final String CONFIG = "C:\\config.ini";
 
-    public static final String Helper = "helper.ini";
+    public static final String HELPER = "helper.ini";
 }

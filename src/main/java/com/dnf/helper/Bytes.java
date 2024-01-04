@@ -3,6 +3,9 @@ package com.dnf.helper;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * @author 情歌
+ */
 public class Bytes {
 
     public static <T> int[] intToBytes(T value) {

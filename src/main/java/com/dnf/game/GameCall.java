@@ -4,6 +4,9 @@ import com.dnf.helper.Bytes;
 import com.dnf.helper.Timer;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 情歌
+ */
 @Component
 public class GameCall extends Base {
     private static boolean compileCallRun;

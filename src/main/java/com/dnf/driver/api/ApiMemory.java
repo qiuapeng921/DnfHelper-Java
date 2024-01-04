@@ -10,9 +10,12 @@ import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author 情歌
+ */
 public class ApiMemory implements ReadWriteMemory {
+    final Logger logger = LoggerFactory.getLogger(ApiMemory.class.getName());
     private final Kernel32 kernel32;
-    Logger logger = LoggerFactory.getLogger(ApiMemory.class.getName());
     private int processId;
 
     public ApiMemory() {
