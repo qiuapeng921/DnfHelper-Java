@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
- * @author Administrator
+ * @author 情歌
  */
 @SpringBootApplication
 @Slf4j
