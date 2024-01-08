@@ -10,6 +10,7 @@
 4. 自己找破图标驱动或者进qq群下载破图标驱动,启动图标驱动
 5. 复制src/main/resources/helper.ini 到target目录下
 6. *** 管理员方式运行 java -jar target/Dnfhelper-Java-1.0.0.jar ***
+7. 功能热键 F1.全屏打怪 End.自动刷图
 ```
 
 ## Stargazers over time
