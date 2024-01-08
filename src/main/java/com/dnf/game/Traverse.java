@@ -181,7 +181,8 @@ public class Traverse extends Base {
             data.objTypeA = memory.readInt(data.objPtr + Address.LxPyAddr);
             data.objCamp = memory.readInt(data.objPtr + Address.ZyPyAddr);
             if ((data.objTypeA == 289 || data.objTypeB == 289) && data.objCamp == 200) {
-                int[] goodsNameByte = memory.readByte(memory.readLong(memory.readLong(data.objPtr + Address.DmWpAddr) + Address.WpMcAddr), 100);
+                long goodsNamePtr = memory.readLong(memory.readLong(data.objPtr + Address.DmWpAddr) + Address.WpMcAddr);
+                int[] goodsNameByte = memory.readByte(goodsNamePtr, 100);
                 data.objNameB = Strings.unicodeToAscii(goodsNameByte);
 
                 if (Arrays.asList(itemArr).contains(data.objNameB)) {
