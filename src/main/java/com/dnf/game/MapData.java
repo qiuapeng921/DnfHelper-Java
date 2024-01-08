@@ -175,7 +175,7 @@ public class MapData extends Base {
     public int backpackWeight() {
         long personPtr = gameCall.personPtr();
         long backPackPtr = memory.readLong(personPtr + Address.WplAddr);
-        int cutWeight = decode(backPackPtr + Address.DqFzAddr);
+        int cutWeight = decode(backPackPtr + 0x58L);
         int maxWeight = decode(personPtr + Address.ZdFzAddr);
         float result = (float) cutWeight / maxWeight * 100;
         logger.debug("背包负重: {}", result);
