@@ -1,6 +1,7 @@
 package com.dnf.game;
 
 import com.dnf.entity.CoordinateType;
+import com.dnf.entity.MapTraversalType;
 import com.dnf.helper.Strings;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -213,5 +214,16 @@ public class MapData extends Base {
         }
 
         return result;
+    }
+
+    public MapTraversalType getMapData() {
+        // 地图遍历数据
+        MapTraversalType data = new MapTraversalType();
+        data.rwAddr = gameCall.personPtr();
+        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
+        data.start = memory.readLong(data.mapData + Address.DtKs2);
+        data.end = memory.readLong(data.mapData + Address.DtJs2);
+        data.objNum = (data.end - data.start) / 24;
+        return data;
     }
 }
