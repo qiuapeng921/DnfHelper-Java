@@ -216,8 +216,12 @@ public class MapData extends Base {
         return result;
     }
 
+    /**
+     * 地图遍历数据
+     *
+     * @return MapTraversalType
+     */
     public MapTraversalType getMapData() {
-        // 地图遍历数据
         MapTraversalType data = new MapTraversalType();
         data.rwAddr = gameCall.personPtr();
         data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
