@@ -56,7 +56,9 @@ public class GameMap extends Base {
                 direction = 3;
             }
         } else if (y == 0) {
-            if (x != 1) {
+            if (x == 1) {
+                direction = 0;
+            } else {
                 direction = 1;
             }
         }
