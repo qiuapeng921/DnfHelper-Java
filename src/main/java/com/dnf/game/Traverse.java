@@ -37,6 +37,11 @@ public class Traverse extends Base {
         return data;
     }
 
+    protected String[] getItemConfig() {
+        String itemStr = iniUtils.read("自动配置", "过滤物品", String.class);
+        return itemStr.split(",");
+    }
+
     /**
      * 组包拾取
      */
@@ -45,8 +50,7 @@ public class Traverse extends Base {
             return;
         }
 
-        String itemStr = iniUtils.read("自动配置", "过滤物品", String.class);
-        String[] itemArr = itemStr.split(",");
+        String[] itemArr = this.getItemConfig();
 
         // 地图遍历数据
         MapTraversalType data = getMapData();
@@ -169,5 +173,38 @@ public class Traverse extends Base {
                 }
             }
         }
+    }
+
+    /**
+     * 是否存在物品
+     *
+     * @return boolean
+     */
+    public boolean isExistsItem() {
+        if (mapData.getStat() != 3) {
+            return false;
+        }
+
+        String[] itemArr = this.getItemConfig();
+        MapTraversalType data = getMapData();
+        for (data.objTmp = 1; data.objTmp < data.objNum; data.objTmp++) {
+            data.objPtr = mapData.getTraversalPtr(data.start, data.objTmp, 2);
+            data.objTypeA = memory.readInt(data.objPtr + Address.LxPyAddr);
+            data.objCamp = memory.readInt(data.objPtr + Address.ZyPyAddr);
+            if ((data.objTypeA == 289 || data.objTypeB == 289) && data.objCamp == 200) {
+                int[] goodsNameByte = memory.readByte(memory.readLong(memory.readLong(data.objPtr + Address.DmWpAddr) + Address.WpMcAddr), 100);
+                data.objNameB = Strings.unicodeToAscii(goodsNameByte);
+
+                if (Arrays.asList(itemArr).contains(data.objNameB)) {
+                    continue;
+                }
+
+                if (data.objPtr != data.rwAddr) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

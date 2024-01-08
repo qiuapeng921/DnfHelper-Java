@@ -17,9 +17,11 @@ import java.util.Random;
  */
 @Component
 public class AutoThread extends Base {
-    static boolean firstEnterMap; // 首次进图
+    // 首次进图
+    static boolean firstEnterMap;
 
-    // static int completedNum;      // 完成次数
+    // 完成次数
+    // static int completedNum;
 
     @Resource
     private MapData mapData;
@@ -95,26 +97,36 @@ public class AutoThread extends Base {
                         int nextInt = random.nextInt(9999999 - 5201314 + 1) + 5201314;
                         memory.writeLong(memory.readLong(Address.PFAddr) + Address.CEPfAddr, nextInt);
                         firstEnterMap = true;
+                        continue;
                     }
 
                     // 跟随怪物
                     if (iniUtils.read("自动配置", "跟随打怪", Integer.class) > 0) {
                         logger.debug("开始跟随怪物");
                         traverse.followMonster();
+                        continue;
                     }
 
                     // 过图
                     if (mapData.isOpenDoor() && !mapData.isBossRoom()) {
-                        // 捡物品
-                        traverse.packPickup();
+                        if (traverse.isExistsItem()) {
+                            // 捡物品
+                            logger.debug("过图捡物");
+                            traverse.packPickup();
+                            continue;
+                        }
                         // 过图
                         passMap();
                         continue;
                     }
 
                     if (mapData.isBossRoom() && mapData.isPass()) {
-                        // 捡物品
-                        traverse.packPickup();
+                        if (traverse.isExistsItem()) {
+                            logger.debug("boss房捡物");
+                            traverse.packPickup();
+                            continue;
+                        }
+
                         // 刷图计次
                         passBoss();
                         // 退出副本
@@ -122,7 +134,8 @@ public class AutoThread extends Base {
                         firstEnterMap = false;
                     }
                 }
-            } catch (Exception ignore) {
+            } catch (Exception exception) {
+                logger.error("自动线程出错 {}", exception.getMessage());
             }
         }
     }
@@ -312,14 +325,11 @@ public class AutoThread extends Base {
         while (GlobalData.autoSwitch) {
             logger.debug("退出副本-处理");
             Timer.sleep(200);
-            // 捡物品
-            traverse.packPickup();
             if (outMap == 0) {
                 Timer.sleep(3000);
             }
             // 退出地图
             sendPack.leaveMap();
-
             // 在城镇或者选图跳出循环
             if (mapData.getStat() == 1) {
                 break;

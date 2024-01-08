@@ -169,9 +169,10 @@ public class SendPack extends Base {
         jmCall(y, 2);
         jmCall(5, 1);
         jmCall(38, 4);
-        jmCall(0, 2);
+        jmCall(1, 2);
         jmCall(0, 4);
         jmCall(0, 1);
+        jmCall(5, 1);
         fbCall();
     }
 
@@ -188,13 +189,14 @@ public class SendPack extends Base {
         jmCall(addr, 4);
         jmCall(0, 1);
         jmCall(1, 1);
-        jmCall(566, 2);
-        jmCall(291, 2);
-        jmCall(9961, 2);
-        jmCall(553, 2);
-        jmCall(285, 2);
-        jmCall(18802, 2);
-        jmCall(24743, 2);
+        jmCall(420, 2);
+        jmCall(254, 2);
+        jmCall(4501, 2);
+        jmCall(435, 2);
+        jmCall(271, 2);
+        jmCall(22624, 2);
+        jmCall(28402, 2);
+        jmCall(0, 1);
         fbCall();
     }
 
