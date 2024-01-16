@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-@SpringBootTest
 public class BufferTest {
     public static <T> int[] convertToBytes(T value) {
         byte[] bytes;
