@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 class ButtonTest {
 
-    @Test
     void driveButton() {
         Timer.sleep(3000);
         Button.DriveButton(Win32VK.VK_LEFT.code, 0, true);

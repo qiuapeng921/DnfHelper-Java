@@ -1,5 +1,7 @@
 package com.dnf.driver;
 
+import java.util.List;
+
 /**
  * @author 情歌
  */
@@ -15,6 +17,21 @@ public interface ReadWriteMemory {
     short readShort(long address);
 
     int readInt(long address);
+
+    default long readOffset(long address, List<Long> offset) {
+        long tmpAddr = address;
+        if (offset.isEmpty()) {
+            return 0;
+        }
+        tmpAddr = readLong(tmpAddr);
+
+        for (int i = 1; i < offset.size(); i++) {
+            tmpAddr = tmpAddr + offset.get(i);
+            tmpAddr = readLong(tmpAddr);
+        }
+
+        return tmpAddr;
+    }
 
     long readLong(long address);
 

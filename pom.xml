@@ -14,8 +14,8 @@
     <version>1.0.0</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <spring-boot.version>3.0.10</spring-boot.version>
         <luna-common.version>2.4.5</luna-common.version>
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
