@@ -57,7 +57,7 @@ public class MapData extends Base {
 
     public boolean isOpenDoor() {
         long personPtr = gameCall.personPtr();
-        long encodeData = memory.readLong(memory.readLong(personPtr + Address.DtPyAddr) + 16);
+        long encodeData = memory.readLong(memory.readLong(personPtr + Address.DtPyAddr-8) + 16);
         return decode(encodeData + Address.SfKmAddr) == 0;
     }
 
@@ -224,7 +224,7 @@ public class MapData extends Base {
     public MapTraversalType getMapData() {
         MapTraversalType data = new MapTraversalType();
         data.rwAddr = gameCall.personPtr();
-        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr) + 16);
+        data.mapData = memory.readLong(memory.readLong(data.rwAddr + Address.DtPyAddr-8) + 16);
         data.start = memory.readLong(data.mapData + Address.DtKs2);
         data.end = memory.readLong(data.mapData + Address.DtJs2);
         data.objNum = (data.end - data.start) / 24;

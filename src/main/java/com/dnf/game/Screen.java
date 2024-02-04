@@ -2,6 +2,7 @@ package com.dnf.game;
 
 import com.dnf.entity.CoordinateType;
 import com.dnf.entity.GlobalData;
+import com.dnf.entity.MapTraversalType;
 import com.dnf.helper.IniUtils;
 import com.dnf.helper.Timer;
 import jakarta.annotation.Resource;
@@ -44,12 +45,8 @@ public class Screen extends Base {
             return;
         }
 
-        long personPtr = gameCall.personPtr();
-        long map = memory.readLong(memory.readLong(personPtr + Address.DtPyAddr) + 16);
-        long start = memory.readLong(map + Address.DtKs2);
-        long end = memory.readLong(map + Address.DtJs2);
-        long objNum = (end - start) / 24;
-
+        // 地图遍历数据
+        MapTraversalType data = mapData.getMapData();
 
         Integer screenCode = iniUtils.read("自动配置", "技能代码", Integer.class);
         Integer screenHarm = iniUtils.read("自动配置", "技能伤害", Integer.class);
@@ -58,17 +55,16 @@ public class Screen extends Base {
 
         int num = 0;
 
-        for (long i = 1; i <= objNum; i++) {
-            long objPtr = mapData.getTraversalPtr(start, i, 2);
-            int objType = memory.readInt(objPtr + Address.LxPyAddr);
-            int objCamp = memory.readInt(objPtr + Address.ZyPyAddr);
-
-            int objCode = memory.readInt(objPtr + Address.DmPyAddr);
-            if (objType == 529 || objType == 545 || objType == 273 || objType == 61440) {
-                long objBlood = memory.readLong(objPtr + Address.GwXlAddr);
-                if (objCamp > 0 && objCode > 0 && objBlood > 0 && objPtr != personPtr) {
-                    CoordinateType monster = mapData.readCoordinate(objPtr);
-                    gameCall.skillCall(personPtr, screenCode, screenHarm, monster.x, monster.y, 0, (float) screenSize);
+        for (data.objTmp = 1; data.objTmp < data.objNum; data.objTmp++) {
+            data.objPtr = mapData.getTraversalPtr(data.start, data.objTmp, 2);
+            data.objTypeA = memory.readInt(data.objPtr + Address.LxPyAddr);
+            data.objCamp = memory.readInt(data.objPtr + Address.ZyPyAddr);
+            data.objCode = memory.readInt(data.objPtr + Address.DmPyAddr);
+            if (data.objTypeA == 529 || data.objTypeA == 545 || data.objTypeA == 273 || data.objTypeA == 61440) {
+                long objBlood = memory.readLong(data.objPtr + Address.GwXlAddr);
+                if (data.objCamp > 0 && data.objCode > 0 && objBlood > 0 && data.objPtr != data.rwAddr) {
+                    CoordinateType monster = mapData.readCoordinate(data.objPtr);
+                    gameCall.skillCall(data.rwAddr, screenCode, screenHarm, monster.x, monster.y, 0, (float) screenSize);
                     num++;
                     if (num >= screenNumber) {
                         break;
