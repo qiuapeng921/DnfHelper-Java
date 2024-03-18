@@ -13,6 +13,8 @@
 7. 功能热键 F1.全屏打怪 End.自动刷图
 ```
 
+### 点击链接加入群聊【毒奶粉研究院】：https://qm.qq.com/q/hedws1v2cS
+
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/qiuapeng921/DnfHelper-Java.svg)](https://starchart.cc/SunnyEmbrace/DnfHelper-Java)
